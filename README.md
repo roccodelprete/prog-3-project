@@ -53,8 +53,11 @@ E' possibile costruire l'applicazione standalone con supporto grafico tramite l'
 Lo studente deve presentare una relazione sintetica (per chi usa latex è possibile scaricare un template dalla piattaforma e-learning). La relazione deve contenere:
 
 - una breve descrizione dei requisiti del progetto;
+
 - il diagramma UML delle classi;
+
 - altri diagrammi se opportuni;
+  
 - parti rilevanti del codice sviluppato;
 
 Per chi usa latex si consiglia di utilizzare la piattaforma Overleaf:
