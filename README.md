@@ -56,6 +56,7 @@ Lo studente deve presentare una relazione sintetica (per chi usa latex è possib
 - il diagramma UML delle classi;
 - altri diagrammi se opportuni;
 - parti rilevanti del codice sviluppato;
+
 Per chi usa latex si consiglia di utilizzare la piattaforma Overleaf:
 https://www.overleaf.com/
 
