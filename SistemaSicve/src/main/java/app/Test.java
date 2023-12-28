@@ -5,6 +5,7 @@ import observer.pattern.*;
 
 /**
  * Test class
+ * @author Rocco Del Prete
  */
 public class Test {
     public static void main(String[] args) {
@@ -29,28 +30,37 @@ public class Test {
         Vehicle vehicle1 = new Vehicle("ABC123");
         Vehicle vehicle2 = new Vehicle("DEF456");
 
-        Command getStatisticsCommand = new GetRouteSpeedStatisticsByVehicleCommand(tutorSystem, route1, vehicle1);
-        Command getStatisticsCommand2 = new GetRouteSpeedStatisticsByVehicleCommand(tutorSystem, route1, vehicle2);
-        Command getStatisticsCommand3 = new GetRouteSpeedStatisticsByVehicleCommand(tutorSystem, route2, vehicle2);
-        Command getStatisticsCommand4 = new GetRouteSpeedStatisticsByVehicleCommand(tutorSystem, route2, vehicle1);
+        Command getStatisticsCommand = new GetRouteVehicleSpeedStatisticsCommand(tutorSystem, route1, vehicle1);
+        Command getStatisticsCommand2 = new GetRouteVehicleSpeedStatisticsCommand(tutorSystem, route1, vehicle2);
+        Command getStatisticsCommand3 = new GetRouteVehicleSpeedStatisticsCommand(tutorSystem, route2, vehicle2);
+        Command getStatisticsCommand4 = new GetRouteVehicleSpeedStatisticsCommand(tutorSystem, route2, vehicle1);
+
+        Command getStatisticsCommand5 = new GetRouteSpeedStatisticsCommand(tutorSystem, route1);
+        Command getStatisticsCommand6 = new GetRouteSpeedStatisticsCommand(tutorSystem, route2);
 
         admin.addCommand(getStatisticsCommand);
         admin.addCommand(getStatisticsCommand2);
         admin.addCommand(getStatisticsCommand3);
         admin.addCommand(getStatisticsCommand4);
+        admin.addCommand(getStatisticsCommand5);
+        admin.addCommand(getStatisticsCommand6);
 
         entranceStation.attach(vehicle1);
         entranceStation.attach(vehicle2);
 
         entranceStation.notifyObservers("entered the route with tutor system");
 
-        vehicle1.handleSpeeding(110.0, route1);
-        vehicle1.handleSpeeding(120.0, route2);
+        vehicle1.handleSpeeding(110.0, route1, tutorSystem);
+        vehicle2.handleSpeeding(120.0, route1, tutorSystem);
+        vehicle1.handleSpeeding(120.0, route2, tutorSystem);
 
         admin.executeCommand(getStatisticsCommand);
         admin.executeCommand(getStatisticsCommand2);
         admin.executeCommand(getStatisticsCommand3);
         admin.executeCommand(getStatisticsCommand4);
+
+        admin.executeCommand(getStatisticsCommand5);
+        admin.executeCommand(getStatisticsCommand6);
 
         tutorSystem.sendAllInfractions(vehicle1, policeStation, route1);
         tutorSystem.sendAllInfractions(vehicle2, policeStation, route2);

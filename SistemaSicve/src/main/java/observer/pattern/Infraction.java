@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Infraction class to represent an infraction
+ * @author Rocco Del Prete
  */
 public class Infraction {
     private SimpleStringProperty vehicleLicensePlate;

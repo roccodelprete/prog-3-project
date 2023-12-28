@@ -2,6 +2,7 @@ package command.pattern;
 
 /**
  * Command to add a route
+ * @author Rocco Del Prete
  */
 public class AddRouteCommand implements Command {
     /**

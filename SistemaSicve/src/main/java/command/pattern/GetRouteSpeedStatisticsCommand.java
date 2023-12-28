@@ -4,8 +4,9 @@ import observer.pattern.Vehicle;
 
 /**
  * Command to get speed statistics
+ * @author Rocco Del Prete
  */
-public class GetRouteSpeedStatisticsByVehicleCommand implements Command {
+public class GetRouteSpeedStatisticsCommand implements Command {
     /**
      * The tutor system
      */
@@ -17,20 +18,13 @@ public class GetRouteSpeedStatisticsByVehicleCommand implements Command {
     private Route route;
 
     /**
-     * The vehicle which traveled the route
-     */
-    private Vehicle vehicle;
-
-    /**
-     * GetSpeedStatisticsCommand constructor
+     * GetRouteSpeedStatisticsCommand constructor
      * @param tutorSystem The tutor system
      * @param route The route to get the speed statistics
-     * @param vehicle The vehicle which traveled the route
      */
-    public GetRouteSpeedStatisticsByVehicleCommand(TutorSystem tutorSystem, Route route, Vehicle vehicle) {
+    public GetRouteSpeedStatisticsCommand(TutorSystem tutorSystem, Route route) {
         this.tutorSystem = tutorSystem;
         this.route = route;
-        this.vehicle = vehicle;
     }
 
     /**
@@ -38,6 +32,6 @@ public class GetRouteSpeedStatisticsByVehicleCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.getRouteSpeedStatisticsByVehicle(route, vehicle);
+        tutorSystem.getRouteSpeedStatistics(route);
     }
 }

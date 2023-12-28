@@ -6,8 +6,9 @@ import javafx.beans.property.SimpleStringProperty;
 import java.util.ArrayList;
 
 /**
- * TutorStation (Concrete subject) that notifies
- * observers about events
+ * TutorStation (Concrete subject) that notifies observers about events
+ * @see VehicleObserver
+ * @author Rocco Del Prete
  */
 public class TutorStation {
     private ArrayList<VehicleObserver> observers = new ArrayList<>();

@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  * Vehicle observer interface that receives
  * notifications about events from a TutorStation
+ * @see TutorStation
+ * @author Rocco Del Prete
  */
 public interface VehicleObserver {
     /**

@@ -2,6 +2,10 @@ package command.pattern;
 
 import java.util.ArrayList;
 
+/**
+ * Class to represent the admin
+ * @author Rocco Del Prete
+ */
 public class Admin {
     /**
      * Commands list

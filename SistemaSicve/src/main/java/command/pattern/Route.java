@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * Class to represent a route with tutor stations
+ * @author Rocco Del Prete
  */
 public class Route {
     /**

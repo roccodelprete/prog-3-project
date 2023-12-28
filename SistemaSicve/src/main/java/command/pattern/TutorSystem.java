@@ -17,6 +17,32 @@ public class TutorSystem {
     private ArrayList<Route> routes = new ArrayList<>();
 
     /**
+     * The speeds list for each route
+     */
+    private Map<Route, ArrayList<SimpleDoubleProperty>> routeSpeeds = new HashMap<>();
+
+    /**
+     * function to get the route speeds
+     * @return The route speeds
+     */
+    public Map<Route, ArrayList<SimpleDoubleProperty>> getRouteSpeeds() {
+        return routeSpeeds;
+    }
+
+    /**
+     * function to set the route speeds
+     * @param routeSpeed The route speed detected
+     * @param route The route where the speed was detected
+     */
+    public void setRouteSpeeds(Double routeSpeed, @NotNull Route route) {
+        if (!this.routeSpeeds.containsKey(route)) {
+            this.routeSpeeds.put(route, new ArrayList<>());
+        }
+
+        this.routeSpeeds.get(route).add(new SimpleDoubleProperty(routeSpeed));
+    }
+
+    /**
      * function to get the routes
      * @return The routes
      */
@@ -71,7 +97,7 @@ public class TutorSystem {
      * @param route The route for which speed statistics are required
      * @param vehicle The vehicle for which speed statistics are required
      */
-    public void getRouteSpeedStatisticsByVehicle(Route route, @NotNull Vehicle vehicle) {
+    public void getRouteVehicleSpeedStatistics(@NotNull Route route, @NotNull Vehicle vehicle) {
         Map<Route, ArrayList<SimpleDoubleProperty>> routeSpeeds = vehicle.getVehicleRouteSpeeds().get(vehicle);
 
         if (routeSpeeds == null || routeSpeeds.get(route) == null || routeSpeeds.get(route).isEmpty()) {
@@ -106,9 +132,47 @@ public class TutorSystem {
     }
 
     /**
-     * function to send the most severe infraction to the police station
+     * function to get speed statistics for a specific route
+     * @param route The route for which speed statistics are required
      */
-    public void sendMostSevereInfraction(Vehicle vehicle, PoliceStation policeStation) {
+    public void getRouteSpeedStatistics(@NotNull Route route) {
+        ArrayList<SimpleDoubleProperty> savedSpeeds = this.routeSpeeds.get(route);
+
+        if (routeSpeeds == null || routeSpeeds.isEmpty()) {
+            System.out.println("No statistics for route " + route.getName());
+            return;
+        }
+
+        double totalSpeed = 0.0;
+        double maxSpeed = Double.MIN_VALUE;
+        double minSpeed = Double.MAX_VALUE;
+
+        for (SimpleDoubleProperty speed : savedSpeeds) {
+            totalSpeed += speed.get();
+
+            if (speed.get() > maxSpeed) {
+                maxSpeed = speed.get();
+            }
+
+            if (speed.get() < minSpeed) {
+                minSpeed = speed.get();
+            }
+        }
+
+        double averageSpeed = totalSpeed / savedSpeeds.size();
+
+        System.out.println("Speed statistics for route " + route.getName() + ":");
+        System.out.println("Average Speed: " + averageSpeed + " km/h");
+        System.out.println("Maximum Speed: " + maxSpeed + " km/h");
+        System.out.println("Minimum Speed: " + minSpeed + " km/h");
+    }
+
+    /**
+     * function to send the most severe infraction to the police station
+     * @param vehicle The vehicle which committed the infraction
+     * @param policeStation The police station to send the infraction
+     */
+    public void sendMostSevereInfraction(@NotNull Vehicle vehicle, @NotNull PoliceStation policeStation) {
         if (vehicle.getInfractions().size() >= 3) {
             Infraction mostSevereInfraction = vehicle.getMostSevereInfraction();
             System.out.println("Sending most severe infraction committed by " + mostSevereInfraction.getVehicleLicensePlate() + " to police station " + policeStation.getName() + ". " + mostSevereInfraction.getMessage());
@@ -121,7 +185,7 @@ public class TutorSystem {
      * @param policeStation The police station to send the infractions
      * @param route The route where the infractions were committed
      */
-    public void sendAllInfractions(Vehicle vehicle, PoliceStation policeStation, Route route) {
+    public void sendAllInfractions(@NotNull Vehicle vehicle, @NotNull PoliceStation policeStation, @NotNull Route route) {
         for (Infraction infraction : vehicle.getInfractions()) {
             System.out.println("Infraction committed by " + infraction.getVehicleLicensePlate() + " on route " + route.getName() + ": " + infraction.getMessage());
         }

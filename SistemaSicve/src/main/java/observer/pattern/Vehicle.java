@@ -1,8 +1,10 @@
 package observer.pattern;
 
 import command.pattern.Route;
+import command.pattern.TutorSystem;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.Map;
 /**
  * Vehicle (Concrete observer) that receives
  * notifications about events from a TutorStation
+ * @author Rocco Del Prete
  */
 public class Vehicle implements VehicleObserver {
     /**
@@ -78,10 +81,13 @@ public class Vehicle implements VehicleObserver {
 
     /**
      * function to handle a pass under the tutor sensor
+     * @param detectedSpeed The speed detected
      * @param route The route where the vehicle passed
+     * @param tutorSystem The tutor system
      */
-    public void handleSpeeding(Double detectedSpeed, Route route) {
+    public void handleSpeeding(Double detectedSpeed, @NotNull Route route, @NotNull TutorSystem tutorSystem) {
         this.setVehicleRouteSpeed(detectedSpeed, route);
+        tutorSystem.setRouteSpeeds(detectedSpeed, route);
 
         String message = "Speeding detected: " + detectedSpeed + " km/h";
         System.out.println(message);

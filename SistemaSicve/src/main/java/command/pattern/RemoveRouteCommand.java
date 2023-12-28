@@ -2,6 +2,7 @@ package command.pattern;
 
 /**
  * Command to remove a route
+ * @author Rocco Del Prete
  */
 public class RemoveRouteCommand implements Command {
     /**

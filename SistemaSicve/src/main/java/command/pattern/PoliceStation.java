@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 /**
  * PoliceStation class to represent a police station
+ * @author Rocco Del Prete
  */
 public class PoliceStation {
     /**
