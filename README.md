@@ -27,7 +27,7 @@ L’utente (autoveicolo) può effettuare le seguenti operazioni:
 - entrare e uscire da una tratta coperta da Tutor
 - richiedere di essere avvisato automaticamente dal sistema (e.g., sms) quando sta entrando in una tratta controllata dal Tutor
 
-## Sistema SICVE
+## Dettagli
 Per i dettagli di sviluppo vedere: https://it.wikipedia.org/wiki/SICVE
 
 ## Note di sviluppo
