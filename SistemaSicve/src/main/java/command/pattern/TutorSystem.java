@@ -22,11 +22,42 @@ public class TutorSystem {
     private Map<Route, ArrayList<SimpleDoubleProperty>> routeSpeeds = new HashMap<>();
 
     /**
+     * The infractions committed by the vehicle
+     */
+    private Map<Vehicle, Map<Route, ArrayList<Infraction>>> infractions = new HashMap<>();
+
+    /**
      * function to get the route speeds
      * @return The route speeds
      */
     public Map<Route, ArrayList<SimpleDoubleProperty>> getRouteSpeeds() {
         return routeSpeeds;
+    }
+
+    /**
+     * function to get the infractions
+     * @return The infractions
+     */
+    public Map<Vehicle, Map<Route, ArrayList<Infraction>>> getInfractions() {
+        return infractions;
+    }
+
+    /**
+     * function to add a new infraction
+     * @param infraction The infraction to add
+     * @param route The route where the infraction was committed
+     * @param vehicle The vehicle which committed the infraction
+     */
+    public void addInfraction(@NotNull Infraction infraction, @NotNull Route route, @NotNull Vehicle vehicle) {
+        if (!this.infractions.containsKey(vehicle)) {
+            this.infractions.put(vehicle, new HashMap<>());
+        }
+
+        if (!this.infractions.get(vehicle).containsKey(route)) {
+            this.infractions.get(vehicle).put(route, new ArrayList<>());
+        }
+
+        this.infractions.get(vehicle).get(route).add(infraction);
     }
 
     /**
@@ -138,7 +169,7 @@ public class TutorSystem {
     public void getRouteSpeedStatistics(@NotNull Route route) {
         ArrayList<SimpleDoubleProperty> savedSpeeds = this.routeSpeeds.get(route);
 
-        if (routeSpeeds == null || routeSpeeds.isEmpty()) {
+        if (savedSpeeds == null || savedSpeeds.isEmpty()) {
             System.out.println("No statistics for route " + route.getName());
             return;
         }
@@ -168,13 +199,43 @@ public class TutorSystem {
     }
 
     /**
-     * function to send the most severe infraction to the police station
-     * @param vehicle The vehicle which committed the infraction
-     * @param policeStation The police station to send the infraction
+     * function to get the most severe infraction
+     * @param route The route where the infraction was committed
+     * @return The most severe infraction
      */
-    public void sendMostSevereInfraction(@NotNull Vehicle vehicle, @NotNull PoliceStation policeStation) {
-        if (vehicle.getInfractions().size() >= 3) {
-            Infraction mostSevereInfraction = vehicle.getMostSevereInfraction();
+    public Infraction getMostSevereInfraction(@NotNull Route route, @NotNull Vehicle vehicle) {
+        if (this.getInfractions().isEmpty()) {
+            return null;
+        }
+
+        if (this.getInfractions().get(vehicle) == null || this.getInfractions().get(vehicle).get(route).isEmpty()) {
+            System.out.println("No infractions committed on route " + route.getName());
+            return null;
+        }
+
+        Infraction mostSevereInfraction = this.getInfractions().get(vehicle).get(route).getFirst();
+        for (Infraction inf : this.infractions.get(vehicle).get(route)) {
+            if (inf.getSpeed() > mostSevereInfraction.getSpeed()) {
+                mostSevereInfraction = inf;
+            }
+        }
+
+        return mostSevereInfraction;
+    }
+
+    /**
+     * function to send the most severe infraction to the police station
+     * @param policeStation The police station to send the infraction
+     * @param route The route where the infraction was committed
+     * @param vehicle The vehicle which committed the infraction
+     */
+    public void sendMostSevereInfraction(@NotNull PoliceStation policeStation, @NotNull Route route, @NotNull Vehicle vehicle) {
+        if (this.getInfractions().get(vehicle).get(route) == null || this.getInfractions().get(vehicle).get(route).isEmpty()) {
+            return;
+        }
+
+        if (this.getInfractions().get(vehicle).get(route).size() >= 3) {
+            Infraction mostSevereInfraction = this.getMostSevereInfraction(route, vehicle);
             System.out.println("Sending most severe infraction committed by " + mostSevereInfraction.getVehicleLicensePlate() + " to police station " + policeStation.getName() + ". " + mostSevereInfraction.getMessage());
         }
     }
@@ -186,9 +247,13 @@ public class TutorSystem {
      * @param route The route where the infractions were committed
      */
     public void sendAllInfractions(@NotNull Vehicle vehicle, @NotNull PoliceStation policeStation, @NotNull Route route) {
-        for (Infraction infraction : vehicle.getInfractions()) {
-            System.out.println("Infraction committed by " + infraction.getVehicleLicensePlate() + " on route " + route.getName() + ": " + infraction.getMessage());
+        if (this.getInfractions().get(vehicle).get(route) == null || this.getInfractions().get(vehicle).get(route).isEmpty()) {
+            System.out.println("No infractions committed on route " + route.getName() + " by vehicle " + vehicle.getPlate());
+            return;
         }
-        System.out.println("Sending all infractions committed by " + vehicle.getPlate() + " to police station " + policeStation.getName());
+
+        for (Infraction infraction : this.getInfractions().get(vehicle).get(route)) {
+            System.out.println("Sending infraction committed by " + infraction.getVehicleLicensePlate() + " to police station " + policeStation.getName() + ". " + infraction.getMessage());
+        }
     }
 }

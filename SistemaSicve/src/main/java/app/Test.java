@@ -14,7 +14,7 @@ public class Test {
         PoliceStation policeStation = new PoliceStation("Police Station 1");
 
         Route route1 = new Route("Route 1", 90.0);
-        Route route2 = new Route("Route 2", 200.0);
+        Route route2 = new Route("Route 2", 80.0);
 
         Command addRouteCommand = new AddRouteCommand(tutorSystem, route1);
         Command addRouteCommand2 = new AddRouteCommand(tutorSystem, route2);
@@ -50,9 +50,12 @@ public class Test {
 
         entranceStation.notifyObservers("entered the route with tutor system");
 
-        vehicle1.handleSpeeding(110.0, route1, tutorSystem);
-        vehicle2.handleSpeeding(120.0, route1, tutorSystem);
-        vehicle1.handleSpeeding(120.0, route2, tutorSystem);
+        vehicle1.handleSpeeding(121.0, route1, tutorSystem);
+        vehicle1.handleSpeeding(123.0, route1, tutorSystem);
+        vehicle1.handleSpeeding(125.0, route1, tutorSystem);
+        vehicle2.handleSpeeding(127.0, route1, tutorSystem);
+        vehicle2.handleSpeeding(130.0, route1, tutorSystem);
+        vehicle2.handleSpeeding(123.0, route1, tutorSystem);
 
         admin.executeCommand(getStatisticsCommand);
         admin.executeCommand(getStatisticsCommand2);
@@ -63,10 +66,16 @@ public class Test {
         admin.executeCommand(getStatisticsCommand6);
 
         tutorSystem.sendAllInfractions(vehicle1, policeStation, route1);
+        tutorSystem.sendAllInfractions(vehicle1, policeStation, route2);
+
+        tutorSystem.sendAllInfractions(vehicle2, policeStation, route1);
         tutorSystem.sendAllInfractions(vehicle2, policeStation, route2);
 
-        tutorSystem.sendMostSevereInfraction(vehicle1, policeStation);
-        tutorSystem.sendMostSevereInfraction(vehicle2, policeStation);
+        tutorSystem.sendMostSevereInfraction(policeStation, route1, vehicle1);
+        tutorSystem.sendMostSevereInfraction(policeStation, route1, vehicle2);
+
+        tutorSystem.sendMostSevereInfraction(policeStation, route2, vehicle1);
+        tutorSystem.sendMostSevereInfraction(policeStation, route2, vehicle2);
 
         for (VehicleObserver vehicle : entranceStation.getObservers()) {
             exitStation.attach(vehicle);

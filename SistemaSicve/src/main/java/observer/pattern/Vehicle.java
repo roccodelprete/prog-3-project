@@ -22,11 +22,6 @@ public class Vehicle implements VehicleObserver {
     private SimpleStringProperty plate;
 
     /**
-     * The infractions committed by the vehicle
-     */
-    private ArrayList<Infraction> infractions = new ArrayList<>();
-
-    /**
      * The vehicle speeds detected on a route
      */
     private Map<Vehicle, Map<Route, ArrayList<SimpleDoubleProperty>>> vehicleRouteSpeeds = new HashMap<>();
@@ -89,38 +84,11 @@ public class Vehicle implements VehicleObserver {
         this.setVehicleRouteSpeed(detectedSpeed, route);
         tutorSystem.setRouteSpeeds(detectedSpeed, route);
 
-        String message = "Speeding detected: " + detectedSpeed + " km/h";
+        String message = "Speeding detected: " + detectedSpeed + " km/h - Vehicle: " + this.plate.get() + " - Route: " + route.getName() + " - Speed limit: " + route.getSpeedLimit() + " km/h";
         System.out.println(message);
         if (detectedSpeed > route.getSpeedLimit()) {
-            Infraction infraction = new Infraction(this.plate.get(), detectedSpeed, message);
-            this.infractions.add(infraction);
+            Infraction infraction = new Infraction(this.plate.get(), detectedSpeed, message, route);
+            tutorSystem.addInfraction(infraction, route, this);
         }
-    }
-
-    /**
-     * function to get the most severe infraction
-     * @return The most severe infraction
-     */
-    public Infraction getMostSevereInfraction() {
-        if (this.infractions.isEmpty()) {
-            return null;
-        }
-
-        Infraction mostSevereInfraction = this.infractions.get(0);
-        for (Infraction inf : this.infractions) {
-            if (inf.getSpeed() > mostSevereInfraction.getSpeed()) {
-                mostSevereInfraction = inf;
-            }
-        }
-
-        return mostSevereInfraction;
-    }
-
-    /**
-     * function to get infractions
-     * @return The infractions
-     */
-    public ArrayList<Infraction> getInfractions() {
-        return this.infractions;
     }
 }
