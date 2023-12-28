@@ -1,11 +1,11 @@
 package command.pattern;
 
-import observer.pattern.Route;
+import observer.pattern.Vehicle;
 
 /**
  * Command to get speed statistics
  */
-public class GetSpeedStatisticsCommand implements Command {
+public class GetRouteSpeedStatisticsByVehicleCommand implements Command {
     /**
      * The tutor system
      */
@@ -17,12 +17,20 @@ public class GetSpeedStatisticsCommand implements Command {
     private Route route;
 
     /**
+     * The vehicle which traveled the route
+     */
+    private Vehicle vehicle;
+
+    /**
      * GetSpeedStatisticsCommand constructor
      * @param tutorSystem The tutor system
+     * @param route The route to get the speed statistics
+     * @param vehicle The vehicle which traveled the route
      */
-    public GetSpeedStatisticsCommand(TutorSystem tutorSystem, Route route) {
+    public GetRouteSpeedStatisticsByVehicleCommand(TutorSystem tutorSystem, Route route, Vehicle vehicle) {
         this.tutorSystem = tutorSystem;
         this.route = route;
+        this.vehicle = vehicle;
     }
 
     /**
@@ -30,6 +38,6 @@ public class GetSpeedStatisticsCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.getSpeedStatistics(route);
+        tutorSystem.getRouteSpeedStatisticsByVehicle(route, vehicle);
     }
 }

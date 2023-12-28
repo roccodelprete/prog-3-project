@@ -1,7 +1,5 @@
 package command.pattern;
 
-import observer.pattern.Route;
-
 /**
  * Command to add a route
  */

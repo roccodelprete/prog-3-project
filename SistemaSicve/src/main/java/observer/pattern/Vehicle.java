@@ -1,0 +1,120 @@
+package observer.pattern;
+
+import command.pattern.Route;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Vehicle (Concrete observer) that receives
+ * notifications about events from a TutorStation
+ */
+public class Vehicle implements VehicleObserver {
+    /**
+     * The vehicle plate
+     */
+    private SimpleStringProperty plate;
+
+    /**
+     * The infractions committed by the vehicle
+     */
+    private ArrayList<Infraction> infractions = new ArrayList<>();
+
+    /**
+     * The vehicle speeds detected on a route
+     */
+    private Map<Vehicle, Map<Route, ArrayList<SimpleDoubleProperty>>> vehicleRouteSpeeds = new HashMap<>();
+
+    /**
+     * Constructor
+     */
+    public Vehicle(String plate) {
+        this.plate = new SimpleStringProperty(plate);
+    }
+
+    /**
+     * Getter for the plate
+     * @return The plate
+     */
+    public String getPlate() {
+        return plate.get();
+    }
+
+    /**
+     * Getter for the speed
+     * @return The speed
+     */
+    public Map<Vehicle, Map<Route, ArrayList<SimpleDoubleProperty>>> getVehicleRouteSpeeds() {
+        return vehicleRouteSpeeds;
+    }
+
+    /**
+     * Setter for the speed
+     * @param speed The speed
+     */
+    public void setVehicleRouteSpeed(Double speed, Route route) {
+        if (!this.vehicleRouteSpeeds.containsKey(this)) {
+            this.vehicleRouteSpeeds.put(this, new HashMap<>());
+        }
+
+        if (!this.vehicleRouteSpeeds.get(this).containsKey(route)) {
+            this.vehicleRouteSpeeds.get(this).put(route, new ArrayList<>());
+        }
+
+        this.vehicleRouteSpeeds.get(this).get(route).add(new SimpleDoubleProperty(speed));
+    }
+
+    /**
+     * function to notify the observer
+     * @param message The message to send to the observer
+     */
+    @Override
+    public void update(SimpleStringProperty message) {
+        System.out.println("Vehicle " + this.plate.get() + " received: " + message.get());
+    }
+
+    /**
+     * function to handle a pass under the tutor sensor
+     * @param route The route where the vehicle passed
+     */
+    public void handleSpeeding(Double detectedSpeed, Route route) {
+        this.setVehicleRouteSpeed(detectedSpeed, route);
+
+        String message = "Speeding detected: " + detectedSpeed + " km/h";
+        System.out.println(message);
+        if (detectedSpeed > route.getSpeedLimit()) {
+            Infraction infraction = new Infraction(this.plate.get(), detectedSpeed, message);
+            this.infractions.add(infraction);
+        }
+    }
+
+    /**
+     * function to get the most severe infraction
+     * @return The most severe infraction
+     */
+    public Infraction getMostSevereInfraction() {
+        if (this.infractions.isEmpty()) {
+            return null;
+        }
+
+        Infraction mostSevereInfraction = this.infractions.get(0);
+        for (Infraction inf : this.infractions) {
+            if (inf.getSpeed() > mostSevereInfraction.getSpeed()) {
+                mostSevereInfraction = inf;
+            }
+        }
+
+        return mostSevereInfraction;
+    }
+
+    /**
+     * function to get infractions
+     * @return The infractions
+     */
+    public ArrayList<Infraction> getInfractions() {
+        return this.infractions;
+    }
+}

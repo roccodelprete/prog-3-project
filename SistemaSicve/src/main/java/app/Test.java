@@ -1,7 +1,6 @@
 package app;
 
 import command.pattern.*;
-import javafx.beans.property.SimpleStringProperty;
 import observer.pattern.*;
 
 /**
@@ -9,69 +8,68 @@ import observer.pattern.*;
  */
 public class Test {
     public static void main(String[] args) {
-        TutorSystem tutorSystem = new TutorSystem();
-        TrafficMonitoringSystem trafficMonitoringSystem = new TrafficMonitoringSystem();
-
-        Route route = new Route("Autostrada del Sole", 130, trafficMonitoringSystem);
-        PoliceStation policeStation = new PoliceStation("Polizia Autostradale");
-        AutoVehicle auto = new AutoVehicle("AB123CD", "Mercedes", "Classe A", "Black", 95);
-        AutoVehicle auto2 = new AutoVehicle("AB456CD", "Mercedes", "Classe B", "Black", 100);
-        AutoVehicle auto3 = new AutoVehicle("AB789CD", "Mercedes", "Classe C", "Black", 105);
-
-        route.addTutor(policeStation);
-        route.addTutor(auto);
-
-        Command addRouteCommand = new AddRouteCommand(tutorSystem, route);
-        Command editRouteCommand = new EditRouteCommand(tutorSystem, route, new Route("Autostrada del Sole", 150, trafficMonitoringSystem));
-        Command removeRouteCommand = new RemoveRouteCommand(tutorSystem, route);
-        Command getSpeedStatisticsCommand = new GetSpeedStatisticsCommand(tutorSystem, route);
-
         Admin admin = new Admin();
+        TutorSystem tutorSystem = new TutorSystem();
+        PoliceStation policeStation = new PoliceStation("Police Station 1");
 
-        admin.addCommand(editRouteCommand);
+        Route route1 = new Route("Route 1", 90.0);
+        Route route2 = new Route("Route 2", 200.0);
+
+        Command addRouteCommand = new AddRouteCommand(tutorSystem, route1);
+        Command addRouteCommand2 = new AddRouteCommand(tutorSystem, route2);
+
         admin.addCommand(addRouteCommand);
-        admin.addCommand(removeRouteCommand);
-        admin.addCommand(getSpeedStatisticsCommand);
+        admin.addCommand(addRouteCommand2);
 
-        admin.executeCommand(addRouteCommand);
-        admin.executeCommand(editRouteCommand);
-        admin.executeCommand(getSpeedStatisticsCommand);
-        tutorSystem.getRoutes().forEach((r) -> {
-            System.out.println(r.getRoute().get("name") + " - " + r.getRoute().get("speedLimit") + " km/h");
-        });
+        admin.executeCommands();
 
-        auto.enterRoute(route);
-        auto2.enterRoute(route);
-        auto3.enterRoute(route);
+        TutorStation entranceStation = new TutorStation();
+        TutorStation exitStation = new TutorStation();
 
-        auto.setSpeed(125);
-        auto2.setSpeed(130);
-        auto3.setSpeed(165);
+        Vehicle vehicle1 = new Vehicle("ABC123");
+        Vehicle vehicle2 = new Vehicle("DEF456");
 
-        route.notifyAuto(auto, new SimpleStringProperty(auto.getSpeed() + " km/h"));
-        route.notifyAuto(auto2, new SimpleStringProperty(auto2.getSpeed() + " km/h"));
-        route.notifyAuto(auto3, new SimpleStringProperty(auto3.getSpeed() + " km/h"));
+        Command getStatisticsCommand = new GetRouteSpeedStatisticsByVehicleCommand(tutorSystem, route1, vehicle1);
+        Command getStatisticsCommand2 = new GetRouteSpeedStatisticsByVehicleCommand(tutorSystem, route1, vehicle2);
+        Command getStatisticsCommand3 = new GetRouteSpeedStatisticsByVehicleCommand(tutorSystem, route2, vehicle2);
+        Command getStatisticsCommand4 = new GetRouteSpeedStatisticsByVehicleCommand(tutorSystem, route2, vehicle1);
 
-        auto.exitRoute(route);
-        auto2.exitRoute(route);
-        auto3.exitRoute(route);
+        admin.addCommand(getStatisticsCommand);
+        admin.addCommand(getStatisticsCommand2);
+        admin.addCommand(getStatisticsCommand3);
+        admin.addCommand(getStatisticsCommand4);
 
-        if (auto.getSpeed() > route.getSpeedLimit()) {
-            System.out.println("Auto " + auto.getPlate() + " has exceeded the speed limit\n");
-            trafficMonitoringSystem.reportInfraction(new Infraction("Speed limit exceeded"));
-            trafficMonitoringSystem.sendInfractionToPolice(policeStation);
+        entranceStation.attach(vehicle1);
+        entranceStation.attach(vehicle2);
+
+        entranceStation.notifyObservers("entered the route with tutor system");
+
+        vehicle1.handleSpeeding(110.0, route1);
+        vehicle1.handleSpeeding(120.0, route2);
+
+        admin.executeCommand(getStatisticsCommand);
+        admin.executeCommand(getStatisticsCommand2);
+        admin.executeCommand(getStatisticsCommand3);
+        admin.executeCommand(getStatisticsCommand4);
+
+        tutorSystem.sendAllInfractions(vehicle1, policeStation, route1);
+        tutorSystem.sendAllInfractions(vehicle2, policeStation, route2);
+
+        tutorSystem.sendMostSevereInfraction(vehicle1, policeStation);
+        tutorSystem.sendMostSevereInfraction(vehicle2, policeStation);
+
+        for (VehicleObserver vehicle : entranceStation.getObservers()) {
+            exitStation.attach(vehicle);
         }
 
-        if (auto2.getSpeed() > route.getSpeedLimit()) {
-            System.out.println("Auto " + auto2.getPlate() + " has exceeded the speed limit\n");
-            trafficMonitoringSystem.reportInfraction(new Infraction("Speed limit exceeded"));
-            trafficMonitoringSystem.sendInfractionToPolice(policeStation);
+        exitStation.notifyObservers("exited the route with tutor system");
+
+        for (VehicleObserver vehicle : entranceStation.getObservers()) {
+            entranceStation.detach(vehicle);
         }
 
-        if (auto3.getSpeed() > route.getSpeedLimit()) {
-            System.out.println("Auto " + auto3.getPlate() + " has exceeded the speed limit\n");
-            trafficMonitoringSystem.reportInfraction(new Infraction("Speed limit exceeded"));
-            trafficMonitoringSystem.sendInfractionToPolice(policeStation);
+        for (VehicleObserver vehicle : exitStation.getObservers()) {
+            exitStation.detach(vehicle);
         }
     }
 }
