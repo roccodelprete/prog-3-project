@@ -1,4 +1,4 @@
-package observer.pattern;
+package observer_memento.pattern;
 
 import javafx.beans.property.SimpleStringProperty;
 

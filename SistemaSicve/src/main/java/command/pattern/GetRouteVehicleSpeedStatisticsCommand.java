@@ -1,6 +1,6 @@
 package command.pattern;
 
-import observer.pattern.Vehicle;
+import observer_memento.pattern.Vehicle;
 
 /**
  * Command to get speed statistics

@@ -16,6 +16,12 @@ public class Route {
      * The route name
      */
     private SimpleStringProperty name;
+
+    /**
+     * The route length
+     */
+    private SimpleDoubleProperty length;
+
     /**
      * The route speed limit
      */
@@ -25,10 +31,12 @@ public class Route {
      * Route constructor
      * @param name The route name
      * @param speedLimit The route speed limit
+     * @param length The route length
      */
-    public Route(String name, Double speedLimit) {
+    public Route(String name, Double speedLimit, Double length) {
         this.name = new SimpleStringProperty(name);
         this.speedLimit = new SimpleDoubleProperty(speedLimit);
+        this.length = new SimpleDoubleProperty(length);
     }
 
     /**
@@ -36,6 +44,13 @@ public class Route {
      */
     public String getName() {
         return name.get();
+    }
+
+    /**
+     * function to get the route length
+     */
+    public Double getLength() {
+        return length.get();
     }
 
     /**
@@ -67,7 +82,8 @@ public class Route {
     public Map<String, Object> getRoute() {
         return Map.of(
                 "name", name.get(),
-                "speedLimit", speedLimit.get()
+                "speedLimit", speedLimit.get(),
+                "length", length.get()
         );
     }
 }

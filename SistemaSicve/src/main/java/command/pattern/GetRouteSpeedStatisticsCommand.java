@@ -1,7 +1,5 @@
 package command.pattern;
 
-import observer.pattern.Vehicle;
-
 /**
  * Command to get speed statistics
  * @author Rocco Del Prete

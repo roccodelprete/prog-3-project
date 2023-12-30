@@ -26,6 +26,7 @@ public class Admin {
     public void executeCommands() {
         for (Command command : commands) {
             command.execute();
+            commands.remove(command);
         }
     }
 
@@ -36,8 +37,9 @@ public class Admin {
     public void executeCommand(Command command) {
         if (commands.contains(command)) {
             command.execute();
+            commands.remove(command);
         } else {
-            System.out.println("Error executing command! Command not found in the system.");
+            System.out.println("Error executing command! Command not found in the system.\n");
         }
     }
 }

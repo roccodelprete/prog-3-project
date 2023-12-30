@@ -1,7 +1,7 @@
-package observer.pattern;
+package observer_memento.pattern;
 
-import command.pattern.Route;
 import javafx.beans.property.SimpleStringProperty;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -45,5 +45,23 @@ public class TutorStation {
      */
     public ArrayList<VehicleObserver> getObservers() {
         return this.observers;
+    }
+
+    /**
+     * function to get a specific vehicle observers
+     * @param observer The vehicle observer to get
+     * @return The vehicle observer
+     */
+    public Vehicle getObserver(VehicleObserver observer) {
+        return (Vehicle) this.observers.get(this.observers.indexOf(observer));
+    }
+
+    /**
+     * function to notify a specific observer
+     * @param observer The observer to notify
+     * @param message The message to send to the observer
+     */
+    public void notifyObserver(@NotNull VehicleObserver observer, String message) {
+        observer.update(new SimpleStringProperty(message));
     }
 }
