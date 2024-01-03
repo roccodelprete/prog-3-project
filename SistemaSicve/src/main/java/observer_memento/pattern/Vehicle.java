@@ -2,6 +2,12 @@ package observer_memento.pattern;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import singleton.pattern.Database;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * Vehicle (Concrete observer) that receives
@@ -34,6 +40,10 @@ public class Vehicle implements VehicleObserver {
      * The current milestone of the vehicle
      */
     private SimpleDoubleProperty currentMilestone = new SimpleDoubleProperty(0);
+
+    /**
+     * Database connection
+     */
 
     /**
      * Constructor
@@ -89,7 +99,7 @@ public class Vehicle implements VehicleObserver {
      * @param message The message to send to the observer
      */
     @Override
-    public void update(SimpleStringProperty message) {
+    public void update(@NotNull SimpleStringProperty message) {
         System.out.println("Vehicle " + this.plate.get() + " received: " + message.get());
     }
 

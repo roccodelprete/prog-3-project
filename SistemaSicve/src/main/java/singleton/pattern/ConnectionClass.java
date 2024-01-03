@@ -45,7 +45,7 @@ public class ConnectionClass {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sicve","root", "prog-3");
-            System.out.println("Connection successful!");
+            System.out.println("Connection successful!\n");
         }
         catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

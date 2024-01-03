@@ -77,7 +77,16 @@ public class Route {
     }
 
     /**
+     * function to set the route length
+     * @param length The route length to set
+     */
+    public void setLength(Double length) {
+        this.length.set(length);
+    }
+
+    /**
      * function to get the route parameters
+     * @return The route parameters
      */
     public Map<String, Object> getRoute() {
         return Map.of(

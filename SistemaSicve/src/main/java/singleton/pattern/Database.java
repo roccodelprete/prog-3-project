@@ -42,11 +42,11 @@ public class Database {
     }
 
     /**
-     * function to do an update
+     * function to do an update or delete
      * @param query The update query to do
      * @throws SQLException if the query is not valid
      */
-    public void update(String query) throws SQLException {
+    public void updateOrDelete(String query) throws SQLException {
         try (Statement statement = connection.getConnection().createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException e) {
