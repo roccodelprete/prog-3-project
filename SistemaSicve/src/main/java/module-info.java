@@ -8,6 +8,7 @@ module org.example.sistemasicve {
     requires mysql.connector.j;
     requires java.desktop;
     requires jbcrypt;
+    requires twilio;
 
     opens org.sistemasicve to javafx.fxml;
     exports command.pattern;

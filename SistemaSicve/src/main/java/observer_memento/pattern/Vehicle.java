@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
+
 /**
  * Vehicle (Concrete observer) that receives
  * notifications about events from a TutorStation
@@ -121,7 +123,7 @@ public class Vehicle implements VehicleObserver {
      */
     @Override
     public void update(@NotNull SimpleStringProperty message) {
-        System.out.println("Vehicle " + this.plate.get() + " received: " + message.get());
+        System.out.println("[" + new Date() + "] " + message.get());
     }
 
     /**

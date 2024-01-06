@@ -89,7 +89,6 @@ public class AddVehicleController {
             try {
                 insertVehicleIntoDb(vehicleToAdd);
                 addedVehicle = vehicleToAdd;
-                showAlert(Alert.AlertType.CONFIRMATION, "Success", "Vehicle " + vehicleToAdd.getPlate() + " added successfully");
             } catch (Exception e) {
                 System.out.println("[" + new Date() + "] ERROR: ");
                 e.printStackTrace();

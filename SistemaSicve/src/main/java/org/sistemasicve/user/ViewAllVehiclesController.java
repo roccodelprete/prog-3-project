@@ -124,9 +124,7 @@ public class ViewAllVehiclesController {
         if (selectedVehicle != null && confirmation) {
             try {
                 deleteVehicleFromDb(selectedVehicle);
-                showAlert(Alert.AlertType.CONFIRMATION, "Success", "Vehicle deleted successfully");
             } catch (Exception e) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete vehicle: " + e.getMessage());
                 System.out.println("[" + new Date() + "] Error deleting vehicle from database: " + e.getMessage());
                 e.printStackTrace();
             } finally {

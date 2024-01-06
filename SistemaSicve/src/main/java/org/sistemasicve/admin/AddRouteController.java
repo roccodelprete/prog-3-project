@@ -88,7 +88,6 @@ public class AddRouteController {
             if (getRouteFromDb(routeName.getText()) == null) {
                 admin.executeCommand(addRouteCommand);
                 addedRoute = getRouteFromDb(routeName.getText());
-                showAlert(Alert.AlertType.CONFIRMATION, "Route added", "Route added successfully!");
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "Route already exists!");
             }
@@ -96,7 +95,7 @@ public class AddRouteController {
             showAlert(Alert.AlertType.ERROR, "Invalid input", "Please enter a valid route length or route speed limit!");
         } finally {
             if (addedRoute != null) {
-                Parent root = FXMLLoader.load(getClass().getResource("all-routes-view.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/org/sistemasicve/all-routes-view.fxml"));
                 Node source = (Node) event.getSource();
                 Stage stage = (Stage) source.getScene().getWindow();
 
@@ -113,7 +112,7 @@ public class AddRouteController {
      */
     @FXML
     public void handleCancelAction(@NotNull ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("all-routes-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/org/sistemasicve/all-routes-view.fxml"));
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
 

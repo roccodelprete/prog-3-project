@@ -1,5 +1,10 @@
 package observer_memento.pattern;
 
+/**
+ * Class that represents the logged user
+ * Singleton pattern
+ * @author Rocco Del Prete
+ */
 public class LoggedUser {
     /**
      * The logged user

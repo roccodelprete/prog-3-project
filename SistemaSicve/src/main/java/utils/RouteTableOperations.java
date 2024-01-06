@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static utils.Alert.showAlert;
 
@@ -37,9 +38,12 @@ public class RouteTableOperations {
 
             preparedStatement.close();
 
-            System.out.println("Route " + route.getName() + " inserted in the database\n");
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Route added successfully!");
+            System.out.println("[" + new Date() + "] Route " + route.getName() + " inserted in the database\n");
         } catch (Exception e) {
-            System.out.println("Error in insert route into database: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot insert route");
+            System.out.println("[" + new Date() + "] Error in insert route into database: " + e.getMessage());
+            e.printStackTrace();
         }
 
     }
@@ -61,7 +65,8 @@ public class RouteTableOperations {
                 return new Route(routeName, speedLimit, length);
             }
         } catch (Exception e) {
-            System.out.println("Error in getting route from database: " + e.getMessage());
+            System.out.println("[" + new Date() + "] Error in getting route from database: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return null;
@@ -86,7 +91,8 @@ public class RouteTableOperations {
                 routes.add(new Route(routeName, speedLimit, length));
             }
         } catch (Exception e) {
-            System.out.println("Error in getting route from database: " + e.getMessage());
+            System.out.println("[" + new Date() + "] Error in getting route from database: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return routes;
@@ -145,10 +151,12 @@ public class RouteTableOperations {
 
         try {
             db.updateOrDelete(updateQuery);
-
-            System.out.println("Route " + route.getName() + " updated in the database\n");
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Route updated successfully!");
+            System.out.println("[" + new Date() + "] Route " + route.getName() + " updated in the database\n");
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Cannot update route: " + e.getMessage());
+            System.out.println("[" + new Date() + "] Error updating route in database: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return route;
@@ -163,10 +171,12 @@ public class RouteTableOperations {
 
         try {
             db.updateOrDelete(deleteQuery);
-
-            System.out.println("Route " + route.getName() + " deleted from the database\n");
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Route deleted successfully!");
+            System.out.println("[" + new Date() + "] Route " + route.getName() + " deleted from the database\n");
         } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete route: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete route");
+            System.out.println("[" + new Date() + "] Error in delete route from database: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

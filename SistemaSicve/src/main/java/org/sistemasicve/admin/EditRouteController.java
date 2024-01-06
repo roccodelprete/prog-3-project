@@ -93,7 +93,6 @@ public class EditRouteController {
 
             admin.addCommand(editCommand);
             admin.executeCommand(editCommand);
-            showAlert(Alert.AlertType.CONFIRMATION, "Route edited", "Route edited successfully!");
         }  catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Invalid input", "Please enter a valid route length or route speed limit!");
         } finally {

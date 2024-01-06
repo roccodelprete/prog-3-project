@@ -26,6 +26,12 @@ import static utils.RouteTableOperations.deleteRouteFromDb;
 
 public class ViewAllRoutesController {
     /**
+     * The logout button
+     */
+    @FXML
+    private Button logoutButton;
+
+    /**
      * The delete button
      */
     @FXML
@@ -123,6 +129,7 @@ public class ViewAllRoutesController {
         setCursorStyleOnHover(editRouteButton, Cursor.HAND);
         setCursorStyleOnHover(deleteRouteButton, Cursor.HAND);
         setCursorStyleOnHover(getRouteStatisticsButton, Cursor.HAND);
+        setCursorStyleOnHover(logoutButton, Cursor.HAND);
 
         routeTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -196,7 +203,6 @@ public class ViewAllRoutesController {
         if (selectedRoute != null && confirmation) {
             try {
                 deleteRouteFromDb(selectedRoute);
-                showAlert(Alert.AlertType.CONFIRMATION, "Success", "Route deleted successfully");
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete route: " + e.getMessage());
             } finally {
@@ -204,7 +210,7 @@ public class ViewAllRoutesController {
                 routeTable.getSelectionModel().clearSelection();
                 editRouteButton.setVisible(false);
                 deleteRouteButton.setVisible(false);
-
+                getRouteStatisticsButton.setVisible(false);
             }
         }
     }
@@ -248,5 +254,20 @@ public class ViewAllRoutesController {
      */
     public void setSelectedRoute(@Nullable Route route) {
         this.selectedRoute = route;
+    }
+
+    /**
+     * Function to handle the logout button
+     * @param event The event to handle
+     */
+    @FXML
+    void handleLogout(@NotNull ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/home-view.fxml"));
+        Parent root = loader.load();
+        Node node = (Node) event.getSource();
+        Stage stage = (Stage) node.getScene().getWindow();
+
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }

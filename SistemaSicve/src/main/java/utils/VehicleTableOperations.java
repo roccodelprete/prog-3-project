@@ -42,6 +42,7 @@ public class VehicleTableOperations {
 
             preparedStatement.close();
 
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Vehicle " + vehicle.getPlate() + " added successfully");
             System.out.println("[" + new Date() + "] Vehicle " + vehicle.getPlate() + " inserted in the database");
         } catch (Exception e) {
             System.out.println("[" + new Date() + "] Error in insert vehicle into database: " + e.getMessage());
@@ -142,9 +143,10 @@ public class VehicleTableOperations {
 
         try {
             db.updateOrDelete(updateQuery);
-
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Vehicle " + vehicle.getPlate() + " updated successfully");
             System.out.println("[" + new Date() + "] Vehicle " + vehiclePlate + " updated in the database");
         } catch (Exception e) {
+            showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Cannot update vehicle");
             System.out.println("[" + new Date() + "] Error updating vehicle in database: " + e.getMessage());
             e.printStackTrace();
         }
@@ -161,10 +163,10 @@ public class VehicleTableOperations {
 
         try {
             db.updateOrDelete(deleteQuery);
-
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Vehicle " + vehicle.getPlate() + " deleted successfully");
             System.out.println("[" + new Date() + "] Vehicle " + vehicle.getPlate() + " deleted from the database");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete vehicle: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete vehicle");
             System.out.println("[" + new Date() + "] Error in delete vehicle from database: " + e.getMessage());
             e.printStackTrace();
         }

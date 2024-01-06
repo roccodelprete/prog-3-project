@@ -78,9 +78,7 @@ public class EditVehicleController {
         try {
             updateVehicleInDb(vehicle, vehiclePlate, vehicleBrand, vehicleModel);
             handleOpenVehiclesView(event);
-            showAlert(Alert.AlertType.INFORMATION, "Vehicle updated", "Vehicle updated successfully");
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Cannot update vehicle: " + e.getMessage());
             System.out.println("[" + new java.util.Date() + "] Error updating vehicle: " + e.getMessage());
             e.printStackTrace();
         } finally {
