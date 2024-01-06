@@ -6,8 +6,20 @@ module org.example.sistemasicve {
     requires org.jetbrains.annotations;
     requires java.sql;
     requires mysql.connector.j;
+    requires java.desktop;
+    requires jbcrypt;
 
-    opens org.example.sistemasicve to javafx.fxml;
+    opens org.sistemasicve to javafx.fxml;
+    exports command.pattern;
     opens app to javafx.fxml;
-    exports org.example.sistemasicve;
+    opens command.pattern;
+    opens strategy.pattern;
+    opens utils;
+    opens observer_memento.pattern;
+    exports org.sistemasicve.admin;
+    exports observer_memento.pattern;
+    opens org.sistemasicve.admin to javafx.fxml;
+    exports org.sistemasicve;
+    exports org.sistemasicve.user;
+    opens org.sistemasicve.user to javafx.fxml;
 }

@@ -17,13 +17,13 @@ public class CommitInfractionTableOperations {
     /**
      * Database connection
      */
-    private final Database db = new Database();
+    private static final Database db = new Database();
 
     /**
      * Function to insert an infraction into the database
      * @param infraction The infraction to insert
      */
-    public void insertCommitInfractionIntoDb(@NotNull Infraction infraction) {
+    public static void insertCommitInfractionIntoDb(@NotNull Infraction infraction) {
         String insertQuery = "INSERT INTO commit_infraction (vehicle_plate, route_name, infraction_description, vehicle_speed) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = db.insert(insertQuery);) {
@@ -50,7 +50,7 @@ public class CommitInfractionTableOperations {
      * @param route The route where the infraction was committed
      * @return The infraction from the database if exists, null otherwise
      */
-    public @Nullable ArrayList<Infraction> getCommitInfractionFromDbByVehicleAndRoute(String vehiclePlate, Route route) {
+    public static @Nullable ArrayList<Infraction> getCommitInfractionFromDbByVehicleAndRoute(String vehiclePlate, Route route) {
         String selectQuery = "SELECT * FROM commit_infraction WHERE vehicle_plate = ? AND route_name = ?";
 
         ArrayList<Infraction> infractions = new ArrayList<>();

@@ -15,14 +15,14 @@ public class PoliceStationTableOperations {
     /**
      * Database connection
      */
-    private final Database db = new Database();
+    private static final Database db = new Database();
 
     /**
      * Function to insert a police station into the database
      * @param policeStation The police station to insert
      * @return The police station inserted
      */
-    public @NotNull PoliceStation insertPoliceStationIntoDb(@NotNull PoliceStation policeStation) {
+    public static @NotNull PoliceStation insertPoliceStationIntoDb(@NotNull PoliceStation policeStation) {
         String insertQuery = "INSERT INTO police_station (name) VALUES (?)";
 
         try (PreparedStatement preparedStatement = db.insert(insertQuery);) {
@@ -45,7 +45,7 @@ public class PoliceStationTableOperations {
      * @param name The name of the police station to get
      * @return The police station from the database if exists, null otherwise
      */
-    public @Nullable PoliceStation getPoliceStationFromDb(String name) {
+    public static @Nullable PoliceStation getPoliceStationFromDb(String name) {
         String selectQuery = "SELECT * FROM police_station WHERE name = '" + name + "'";
 
         try (ResultSet resultSet = db.query(selectQuery)) {

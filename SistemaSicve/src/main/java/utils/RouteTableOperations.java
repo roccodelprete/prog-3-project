@@ -7,19 +7,23 @@ import singleton.pattern.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+
+import static utils.Alert.showAlert;
 
 public class RouteTableOperations {
     /**
      * The database connection
      */
-    private final Database db = new Database();
+    private static final Database db = new Database();
 
     /**
      * function to insert a vehicle in the database
      * @param route The route to insert
      */
-    public void insertRouteIntoDb(@NotNull Route route) {
+    public static void insertRouteIntoDb(@NotNull Route route) {
         String insertQuery = "INSERT INTO route (name, speed_limit, length) VALUES (?, ?, ?)";
 
         try {
@@ -45,14 +49,14 @@ public class RouteTableOperations {
      * @param name The name of the route
      * @return The route from the database if exists, null otherwise
      */
-    public @Nullable Route getRouteFromDb(String name) {
+    public static @Nullable Route getRouteFromDb(String name) {
         String selectQuery = "SELECT * FROM route WHERE name = '" + name + "'";
 
         try (ResultSet resultSet = db.query(selectQuery)) {
             if (resultSet.next()) {
                 String routeName = resultSet.getString("name");
-                Double speedLimit = Double.valueOf(resultSet.getString("speed_limit"));
-                Double length = Double.valueOf(resultSet.getString("length"));
+                Double speedLimit = resultSet.getDouble("speed_limit");
+                Double length = resultSet.getDouble("length");
 
                 return new Route(routeName, speedLimit, length);
             }
@@ -63,17 +67,18 @@ public class RouteTableOperations {
         return null;
     }
 
+
     /**
      * function to get all routes from the database
-     * @return The routes from the database if exists, null otherwise
+     * @return The routes from the database
      */
-    public ArrayList<Route> getAllRoutesFromDb() {
+    public static @NotNull ArrayList<Route> getAllRoutesFromDb() {
         String selectQuery = "SELECT * FROM route";
 
-        ArrayList<Route> routes = new ArrayList<Route>();
+        ArrayList<Route> routes = new ArrayList<>();
 
         try (ResultSet resultSet = db.query(selectQuery)) {
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 String routeName = resultSet.getString("name");
                 Double speedLimit = Double.valueOf(resultSet.getString("speed_limit"));
                 Double length = Double.valueOf(resultSet.getString("length"));
@@ -95,7 +100,7 @@ public class RouteTableOperations {
      * @param length The new length of the route
      * @return The route updated
      */
-    public @NotNull Route updateRouteInDb(@NotNull Route route, @Nullable String name, @Nullable Double speedLimit, @Nullable Double length) {
+    public static @NotNull Route updateRouteInDb(@NotNull Route route, @Nullable String name, @Nullable Double speedLimit, @Nullable Double length) {
         String updateQuery = null;
 
         if (name != null && speedLimit != null && length != null) {
@@ -142,10 +147,26 @@ public class RouteTableOperations {
             db.updateOrDelete(updateQuery);
 
             System.out.println("Route " + route.getName() + " updated in the database\n");
-        } catch (Exception e) {
-            System.out.println("Error in update route into database: " + e.getMessage());
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot update route: " + e.getMessage());
         }
 
         return route;
+    }
+
+    /**
+     * function to delete a route from the database
+     * @param route The route to delete
+     */
+    public static void deleteRouteFromDb(@NotNull Route route) {
+        String deleteQuery = "DELETE FROM route WHERE name = '" + route.getName() + "'";
+
+        try {
+            db.updateOrDelete(deleteQuery);
+
+            System.out.println("Route " + route.getName() + " deleted from the database\n");
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete route: " + e.getMessage());
+        }
     }
 }

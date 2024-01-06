@@ -6,7 +6,7 @@ import observer_memento.pattern.Vehicle;
  * Command to get speed statistics
  * @author Rocco Del Prete
  */
-public class GetRouteVehicleSpeedStatisticsCommand implements Command {
+public class GetRouteVehicleStatisticsCommand implements Command {
     /**
      * The tutor system
      */
@@ -28,7 +28,7 @@ public class GetRouteVehicleSpeedStatisticsCommand implements Command {
      * @param route The route to get the speed statistics
      * @param vehicle The vehicle which traveled the route
      */
-    public GetRouteVehicleSpeedStatisticsCommand(TutorSystem tutorSystem, Route route, Vehicle vehicle) {
+    public GetRouteVehicleStatisticsCommand(TutorSystem tutorSystem, Route route, Vehicle vehicle) {
         this.tutorSystem = tutorSystem;
         this.route = route;
         this.vehicle = vehicle;
@@ -39,6 +39,6 @@ public class GetRouteVehicleSpeedStatisticsCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.getRouteVehicleSpeedStatistics(route, vehicle);
+        tutorSystem.getRouteVehicleStatistics(route, vehicle);
     }
 }

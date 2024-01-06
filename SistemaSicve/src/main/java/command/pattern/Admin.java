@@ -1,5 +1,7 @@
 package command.pattern;
 
+import observer_memento.pattern.User;
+
 import java.util.ArrayList;
 
 /**
@@ -8,9 +10,22 @@ import java.util.ArrayList;
  */
 public class Admin {
     /**
+     * The user associated to the admin
+     */
+    private User user;
+
+    /**
      * Commands list
      */
     private ArrayList<Command> commands = new ArrayList<>();
+
+    /**
+     * Constructor
+     * @param user The user associated to the admin
+     */
+    public Admin(User user) {
+        this.user = user;
+    }
 
     /**
      * function to add a new command
@@ -41,5 +56,13 @@ public class Admin {
         } else {
             System.out.println("Error executing command! Command not found in the system.\n");
         }
+    }
+
+    /**
+     * Getter for the user
+     * @return The user
+     */
+    public User getUser() {
+        return user;
     }
 }

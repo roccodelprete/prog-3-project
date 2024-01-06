@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="622.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sistemasicve.admin.ViewAllRoutesController">
+   <children>
+      <TableView fx:id="routeTable" layoutY="-1.0" prefHeight="551.0" prefWidth="960.0">
+        <columns>
+          <TableColumn fx:id="routeNameColumn" minWidth="320.0" prefWidth="320.0" text="Vehicle Plate" />
+          <TableColumn fx:id="routeSpeedLimitColumn" minWidth="320.0" prefWidth="320.0" text="Vehicle Brand" />
+            <TableColumn fx:id="routeLengthColumn" minWidth="320.0" prefWidth="320.0" text="Vehicle Model" />
+        </columns>
+      </TableView>
+      <Button fx:id="addRouteButton" layoutX="834.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleAddRoute" prefHeight="40.0" prefWidth="112.0" text="Add Vehicle">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="editRouteButton" layoutX="713.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleEditRoute" prefHeight="40.0" prefWidth="112.0" text="Edit Vehicle">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="deleteRouteButton" layoutX="590.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleDeleteRoute" prefHeight="40.0" prefWidth="112.0" text="Delete Vehicle">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button><Button fx:id="getRouteStatisticsButton" layoutX="590.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleGetRouteStatistics" prefHeight="40.0" prefWidth="112.0" text="Delete Vehicle">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

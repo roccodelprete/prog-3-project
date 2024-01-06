@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="443.0" prefWidth="644.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sistemasicve.user.UserViewController">
+   <children>
+      <ImageView fitHeight="92.0" fitWidth="169.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/sicve.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="addVehicleButton" layoutX="246.0" layoutY="252.0" mnemonicParsing="false" onAction="#handleAddVehicle" text="Add your vehicle">
+         <font>
+            <Font name="Century Gothic" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="enterRouteButton" layoutX="179.0" layoutY="190.0" mnemonicParsing="false" onAction="#handleEnterRoute" text="Enter route">
+         <font>
+            <Font name="Century Gothic" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="exitrouteButton" layoutX="368.0" layoutY="190.0" mnemonicParsing="false" onAction="#handleExitRouteButton" text="Exit route">
+         <font>
+            <Font name="Century Gothic" size="16.0" />
+         </font>
+      </Button>
+      <CheckBox fx:id="sendMeNotification" layoutX="81.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleNotificationChoice" prefHeight="46.0" prefWidth="484.0" text="Wanna receive notification on enter/exit a route with tutor?">
+         <font>
+            <Font name="Century Gothic" size="15.0" />
+         </font>
+      </CheckBox>
+      <Button fx:id="logoutButton" layoutX="14.0" layoutY="404.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="29.0" prefWidth="93.0" text="Logout">
+         <font>
+            <Font name="Century Gothic" size="15.0" />
+         </font>
+      </Button>
+      <Label fx:id="userLabel" layoutX="179.0" layoutY="41.0" text="Hello,">
+         <font>
+            <Font name="Century Gothic" size="30.0" />
+         </font>
+      </Label>
+      <Button fx:id="viewVehiclesList" layoutX="241.0" layoutY="136.0" mnemonicParsing="false" onAction="#handleOpenViewVehiclesList" text="View your vehicles">
+         <font>
+            <Font name="Century Gothic" size="16.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

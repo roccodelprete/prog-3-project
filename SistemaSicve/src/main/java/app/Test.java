@@ -3,11 +3,16 @@ package app;
 import command.pattern.*;
 import observer_memento.pattern.*;
 import org.jetbrains.annotations.NotNull;
-import utils.PoliceStationTableOperations;
-import utils.RouteTableOperations;
-import utils.VehicleTableOperations;
 
 import java.util.ArrayList;
+
+import static utils.PoliceStationTableOperations.getPoliceStationFromDb;
+import static utils.PoliceStationTableOperations.insertPoliceStationIntoDb;
+import static utils.RouteTableOperations.getRouteFromDb;
+import static utils.UserTableOperations.getUserFromDb;
+import static utils.UserTableOperations.insertUserIntoDb;
+import static utils.VehicleTableOperations.getVehicleFromDb;
+import static utils.VehicleTableOperations.insertVehicleIntoDb;
 
 /**
  * Test class to test the application
@@ -41,24 +46,31 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        VehicleTableOperations vehicleTableOperations = new VehicleTableOperations();
-        PoliceStationTableOperations policeStationTableOperations = new PoliceStationTableOperations();
-        RouteTableOperations routeTableOperations = new RouteTableOperations();
+        User user = getUserFromDb("rocco@gmail.com") == null
+                ? insertUserIntoDb(
+                        new User("Rocco", "Del Prete", "rocco@gmail.com", "rocco", false
+                    ))
+                : getUserFromDb("rocco@gmail.com");
 
-        Admin admin = new Admin();
+        Admin admin = new Admin(
+                getUserFromDb("admin@admin.com") == null
+                    ? insertUserIntoDb(
+                        new User("Admin", "Admin", "admin@admin.com", "admin", false))
+                    : getUserFromDb("admin@admin.com"));
+
         TutorSystem tutorSystem = new TutorSystem();
 
         PoliceStation policeStation =
-                policeStationTableOperations.getPoliceStationFromDb("Police Station 1") == null
-                ? policeStationTableOperations.insertPoliceStationIntoDb(new PoliceStation("Police Station 1"))
-                : policeStationTableOperations.getPoliceStationFromDb("Police Station 1");
+                getPoliceStationFromDb("Police Station 1") == null
+                ? insertPoliceStationIntoDb(new PoliceStation("Police Station 1"))
+                : getPoliceStationFromDb("Police Station 1");
 
         ArrayList<Command> commands = new ArrayList<>();
 
         commands.add(new AddRouteCommand(tutorSystem, new Route("Route 1", 100.0, 1000.0)));
         commands.add(new AddRouteCommand(tutorSystem, new Route("Route 2", 130.0, 1200.0)));
 
-        Command editRouteCommand = new EditRouteCommand(tutorSystem, routeTableOperations.getRouteFromDb("Route 1"),
+        Command editRouteCommand = new EditRouteCommand(tutorSystem, getRouteFromDb("Route 1"),
                 null, 70.0, null);
         admin.addCommand(editRouteCommand);
 
@@ -71,9 +83,9 @@ public class Test {
         TutorStation entranceStation = new TutorStation();
         TutorStation exitStation = new TutorStation();
 
-        Vehicle vehicle = vehicleTableOperations.getVehicleFromDb("AB123CD") == null ?
-                vehicleTableOperations.insertVehicleIntoDb(new Vehicle("AB123CD", "Fiat", "Punto")) :
-                vehicleTableOperations.getVehicleFromDb("AB123CD");
+        Vehicle vehicle = getVehicleFromDb("AB123CD") == null
+                ? insertVehicleIntoDb(new Vehicle("AB123CD", "Fiat", "Punto", user.getEmail()))
+                : getVehicleFromDb("AB123CD");
 
         double tripLength = 1000.0;
 
@@ -107,9 +119,9 @@ public class Test {
         }
 
         tutorSystem.getRoutes().forEach(route ->
-                statisticsCommands.add(new GetRouteVehicleSpeedStatisticsCommand(tutorSystem, route, vehicle)));
+                statisticsCommands.add(new GetRouteVehicleStatisticsCommand(tutorSystem, route, vehicle)));
         tutorSystem.getRoutes().forEach(route ->
-                statisticsCommands.add(new GetRouteSpeedStatisticsCommand(tutorSystem, route)));
+                statisticsCommands.add(new GetRouteStatisticsCommand(tutorSystem, route)));
 
         statisticsCommands.forEach(admin::addCommand);
 

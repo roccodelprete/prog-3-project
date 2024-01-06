@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="622.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sistemasicve.user.ViewAllVehiclesController">
+   <children>
+      <TableView fx:id="vehicleTable" prefHeight="551.0" prefWidth="960.0">
+         <columns>
+            <TableColumn fx:id="vehiclePlateColumn" minWidth="300.0" prefWidth="320.0" text="Vehicle Plate" />
+            <TableColumn fx:id="vehicleBrandColumn" minWidth="300.0" prefWidth="320.0" text="Vehicle Brand" />
+            <TableColumn fx:id="vehicleModelColumn" minWidth="300.0" prefWidth="320.0" text="Vehicle Model" />
+         </columns>
+      </TableView>
+      <Button fx:id="deleteVehicleButton" layoutX="590.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleDeleteVehicle" prefHeight="40.0" prefWidth="112.0" text="Delete Vehicle">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="editVehicleButton" layoutX="713.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleEditVehicle" prefHeight="40.0" prefWidth="112.0" text="Edit Vehicle">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="addVehicleButton" layoutX="834.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleAddVehicle" prefHeight="40.0" prefWidth="112.0" text="Add Vehicle">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="goBackButton" layoutX="14.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleGoBack" prefHeight="40.0" prefWidth="112.0" text="Go Back">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

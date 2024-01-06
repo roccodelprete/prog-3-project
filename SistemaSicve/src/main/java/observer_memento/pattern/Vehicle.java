@@ -3,11 +3,6 @@ package observer_memento.pattern;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import singleton.pattern.Database;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 /**
  * Vehicle (Concrete observer) that receives
@@ -42,16 +37,26 @@ public class Vehicle implements VehicleObserver {
     private SimpleDoubleProperty currentMilestone = new SimpleDoubleProperty(0);
 
     /**
-     * Database connection
+     * The user email who owns the vehicle
      */
+    private SimpleStringProperty userEmail;
 
     /**
      * Constructor
      */
-    public Vehicle(String plate, String brand, String model) {
+    public Vehicle(String plate, String brand, String model, String userEmail) {
         this.plate = new SimpleStringProperty(plate);
         this.brand = new SimpleStringProperty(brand);
         this.model = new SimpleStringProperty(model);
+        this.userEmail = new SimpleStringProperty(userEmail);
+    }
+
+    /**
+     * Getter for the user
+     * @return The user
+     */
+    public String getUserEmail() {
+        return userEmail.get();
     }
 
     /**
@@ -63,11 +68,27 @@ public class Vehicle implements VehicleObserver {
     }
 
     /**
+     * Setter for the plate
+     * @param plate The plate to set
+     */
+    public void setPlate(String plate) {
+        this.plate = new SimpleStringProperty(plate);
+    }
+
+    /**
      * Getter for the brand
      * @return The brand
      */
     public String getBrand() {
         return brand.get();
+    }
+
+    /**
+     * Setter for the brand
+     * @param brand The brand to set
+     */
+    public void setBrand(String brand) {
+        this.brand = new SimpleStringProperty(brand);
     }
 
     /**
@@ -79,11 +100,11 @@ public class Vehicle implements VehicleObserver {
     }
 
     /**
-     * Getter for the last distance traveled
-     * @return The last distance traveled
+     * Setter for the model
+     * @param model The model to set
      */
-    public Double getLastDistanceTraveled() {
-        return lastDistanceTraveled.get();
+    public void setModel(String model) {
+        this.model = new SimpleStringProperty(model);
     }
 
     /**

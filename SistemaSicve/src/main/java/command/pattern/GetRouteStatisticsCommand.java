@@ -4,7 +4,7 @@ package command.pattern;
  * Command to get speed statistics
  * @author Rocco Del Prete
  */
-public class GetRouteSpeedStatisticsCommand implements Command {
+public class GetRouteStatisticsCommand implements Command {
     /**
      * The tutor system
      */
@@ -20,7 +20,7 @@ public class GetRouteSpeedStatisticsCommand implements Command {
      * @param tutorSystem The tutor system
      * @param route The route to get the speed statistics
      */
-    public GetRouteSpeedStatisticsCommand(TutorSystem tutorSystem, Route route) {
+    public GetRouteStatisticsCommand(TutorSystem tutorSystem, Route route) {
         this.tutorSystem = tutorSystem;
         this.route = route;
     }
@@ -30,6 +30,6 @@ public class GetRouteSpeedStatisticsCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.getRouteSpeedStatistics(route);
+        tutorSystem.getRouteStatistics(route);
     }
 }

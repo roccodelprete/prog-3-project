@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="435.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sistemasicve.admin.AddRouteController">
+   <children>
+      <TextField fx:id="routeName" layoutX="188.0" layoutY="122.0" prefHeight="29.0" prefWidth="226.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </TextField>
+      <Label layoutX="38.0" layoutY="116.0" prefHeight="40.0" prefWidth="128.0" text="Route name" textAlignment="CENTER">
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+         <font>
+            <Font name="Century Gothic" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="40.0" layoutY="184.0" prefHeight="40.0" prefWidth="148.0" text="Route speed limit" textAlignment="CENTER">
+         <font>
+            <Font name="Century Gothic" size="15.0" />
+         </font>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </Label>
+      <TextField fx:id="routeSpeedLimit" layoutX="188.0" layoutY="190.0" prefHeight="29.0" prefWidth="226.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="routeLength" layoutX="188.0" layoutY="258.0" prefHeight="29.0" prefWidth="226.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </TextField>
+      <Label layoutX="40.0" layoutY="252.0" prefHeight="40.0" prefWidth="138.0" text="Route length" textAlignment="CENTER">
+         <font>
+            <Font name="Century Gothic" size="15.0" />
+         </font>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </Label>
+      <Button fx:id="addButton" layoutX="401.0" layoutY="379.0" mnemonicParsing="false" onAction="#handleAddRoute" prefHeight="40.0" prefWidth="83.0" text="Add">
+         <font>
+            <Font name="Century Gothic" size="15.0" />
+         </font></Button>
+      <Button fx:id="cancelButton" layoutX="309.0" layoutY="379.0" mnemonicParsing="false" onAction="#handleCancelAction" prefHeight="40.0" prefWidth="83.0" text="Cancel">
+         <font>
+            <Font name="Century Gothic" size="15.0" />
+         </font></Button>
+      <Label layoutX="14.0" layoutY="14.0" text="Add route">
+         <font>
+            <Font name="Century Gothic" size="32.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

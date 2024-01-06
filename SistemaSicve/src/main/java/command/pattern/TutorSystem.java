@@ -1,44 +1,28 @@
 package command.pattern;
 
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.control.Alert;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import singleton.pattern.Database;
-import utils.CommitInfractionTableOperations;
+import org.sistemasicve.admin.GetStatisticsController;
 import utils.FormatNumber;
-import utils.RouteTableOperations;
 
 import java.util.*;
+
+import static utils.Alert.showAlert;
+import static utils.CommitInfractionTableOperations.insertCommitInfractionIntoDb;
+import static utils.DetectionTableOperations.*;
+import static utils.FormatNumber.formatNumber;
+import static utils.RouteTableOperations.*;
 
 /**
  * Class to represent the add route command
  */
 public class TutorSystem {
     /**
-     * The database operations on the route table
-     */
-    RouteTableOperations routeTableOperations = new RouteTableOperations();
-
-    /**
-     * The database operations on the commit_infraction table
-     */
-    CommitInfractionTableOperations commitInfractionTableOperations = new CommitInfractionTableOperations();
-
-    /**
      * The routes list
      */
     private ArrayList<Route> routes = new ArrayList<>();
-
-    /**
-     * The speeds list for each route
-     */
-    private Map<Route, ArrayList<SimpleDoubleProperty>> routeSpeeds = new HashMap<>();
-
-    /**
-     * The vehicle speeds detected on a route
-     */
-    private Map<Vehicle, Map<Route, ArrayList<SimpleDoubleProperty>>> vehicleRouteSpeeds = new HashMap<>();
 
     /**
      * The infractions committed by the vehicle
@@ -46,11 +30,29 @@ public class TutorSystem {
     private Map<Vehicle, Map<Route, ArrayList<Infraction>>> infractions = new HashMap<>();
 
     /**
-     * function to get the route speeds
-     * @return The route speeds
+     * Map to store the route statistics filtered by vehicle
      */
-    public Map<Route, ArrayList<SimpleDoubleProperty>> getRouteSpeeds() {
-        return routeSpeeds;
+    private Map<String, Double> routeVehicleStatistics = new HashMap<>();
+
+    /**
+     * Map to store the route statistics
+     */
+    private Map<String, Double> routeStatistics = new HashMap<>();
+
+    /**
+     * function to get the route vehicle statistics
+     * @return The route vehicle statistics
+     */
+    public Map<String, Double> getRouteVehicleStatistics() {
+        return routeVehicleStatistics;
+    }
+
+    /**
+     * function to get the route statistics
+     * @return The route statistics
+     */
+    public Map<String, Double> getRouteStatistics() {
+        return routeStatistics;
     }
 
     /**
@@ -78,46 +80,7 @@ public class TutorSystem {
 
         this.infractions.get(vehicle).get(route).add(infraction);
 
-        commitInfractionTableOperations.insertCommitInfractionIntoDb(infraction);
-    }
-
-    /**
-     * function to set the route speeds
-     * @param routeSpeed The route speed detected
-     * @param route The route where the speed was detected
-     */
-    public void setRouteSpeeds(Double routeSpeed, @NotNull Route route) {
-        if (!this.routeSpeeds.containsKey(route)) {
-            this.routeSpeeds.put(route, new ArrayList<>());
-        }
-
-        this.routeSpeeds.get(route).add(new SimpleDoubleProperty(routeSpeed));
-    }
-
-    /**
-     * Getter for the speed
-     * @return The speed
-     */
-    public Map<Vehicle, Map<Route, ArrayList<SimpleDoubleProperty>>> getVehicleRouteSpeeds() {
-        return vehicleRouteSpeeds;
-    }
-
-    /**
-     * Setter for the speed of a vehicle on a route
-     * @param speed The speed
-     * @param route The route
-     * @param vehicle The vehicle
-     */
-    public void setVehicleRouteSpeed(Double speed, Route route, Vehicle vehicle) {
-        if (!this.vehicleRouteSpeeds.containsKey(vehicle)) {
-            this.vehicleRouteSpeeds.put(vehicle, new HashMap<>());
-        }
-
-        if (!this.vehicleRouteSpeeds.get(vehicle).containsKey(route)) {
-            this.vehicleRouteSpeeds.get(vehicle).put(route, new ArrayList<>());
-        }
-
-        this.vehicleRouteSpeeds.get(vehicle).get(route).add(new SimpleDoubleProperty(speed));
+        insertCommitInfractionIntoDb(infraction);
     }
 
     /**
@@ -133,8 +96,8 @@ public class TutorSystem {
      * @param route The route to add
      */
     public void addNewRoute(@NotNull Route route) {
-        if (routeTableOperations.getRouteFromDb(route.getName()) == null) {
-            routeTableOperations.insertRouteIntoDb(route);
+        if (getRouteFromDb(route.getName()) == null) {
+            insertRouteIntoDb(route);
             System.out.println("Adding route " + route.getRoute().get("name") + "\n");
         }
 
@@ -158,19 +121,23 @@ public class TutorSystem {
      * @param length The new length
      */
     public void editRoute(@NotNull Route existingRoute, @Nullable String routeName, @Nullable Double speedLimit, @Nullable Double length) {
-        Route routeToUpdate = routeTableOperations.getRouteFromDb(existingRoute.getName());
+        Route routeToUpdate = getRouteFromDb(existingRoute.getName());
 
         if (routeToUpdate == null) {
             System.out.println("Error editing route. Route not found in the database.\n");
             return;
         }
 
-        Route editedRoute = routeTableOperations.updateRouteInDb(routeToUpdate, routeName, speedLimit, length);
+        try {
+            Route editedRoute = updateRouteInDb(routeToUpdate, routeName, speedLimit, length);
 
-        routes.remove(existingRoute);
-        routes.add(editedRoute);
+            routes.remove(existingRoute);
+            routes.add(editedRoute);
 
-        System.out.println("Route " + existingRoute.getRoute().get("name") + " parameters edited: " + editedRoute.getRoute() + "\n");
+            System.out.println("Route " + existingRoute.getRoute().get("name") + " parameters edited: " + editedRoute.getRoute() + "\n");
+        } catch (Exception e) {
+            System.out.println("Error editing route: " + e.getMessage() + "\n");
+        }
     }
 
     /**
@@ -178,50 +145,55 @@ public class TutorSystem {
      * @param route The route for which speed statistics are required
      * @param vehicle The vehicle for which speed statistics are required
      */
-    public void getRouteVehicleSpeedStatistics(@NotNull Route route, @NotNull Vehicle vehicle) {
-        Map<Route, ArrayList<SimpleDoubleProperty>> routeSpeeds = this.getVehicleRouteSpeeds().get(vehicle);
+    public void getRouteVehicleStatistics(@NotNull Route route, @NotNull Vehicle vehicle) {
+        ArrayList<Detection> detections = getDetectionByRouteAndVehicleFromDb(vehicle.getPlate(), route.getName());
 
-        if (routeSpeeds == null || routeSpeeds.get(route) == null || routeSpeeds.get(route).isEmpty()) {
-            System.out.println("No vehicles with plate " + vehicle.getPlate() + " on route " + route.getName() + "\n");
+        if (detections.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", "No statistics for route " + route.getName() + " and vehicle " + vehicle.getPlate());
+
+            routeVehicleStatistics.put("avgSpeed", 0.0);
+            routeVehicleStatistics.put("maxSpeed", 0.0);
+            routeVehicleStatistics.put("minSpeed", 0.0);
+
             return;
         }
-
-        ArrayList<SimpleDoubleProperty> savedSpeeds = this.getVehicleRouteSpeeds().get(vehicle).get(route);
 
         double totalSpeed = 0.0;
         double maxSpeed = Double.MIN_VALUE;
         double minSpeed = Double.MAX_VALUE;
 
-        for (SimpleDoubleProperty speed : savedSpeeds) {
-            totalSpeed += speed.get();
+        for (Detection detection : detections) {
+            totalSpeed += detection.getSpeed();
 
-            if (speed.get() > maxSpeed) {
-                maxSpeed = speed.get();
+            if (detection.getSpeed() > maxSpeed) {
+                maxSpeed = detection.getSpeed();
             }
 
-            if (speed.get() < minSpeed) {
-                minSpeed = speed.get();
+            if (detection.getSpeed() < minSpeed) {
+                minSpeed = detection.getSpeed();
             }
         }
 
-        double averageSpeed = totalSpeed / savedSpeeds.size();
+        double averageSpeed = totalSpeed / detections.size();
 
-        System.out.println("Speed statistics for route " + route.getName() + " references vehicle with plate " + vehicle.getPlate() + ":");
-        System.out.println("Average Speed: " + FormatNumber.formatNumber(averageSpeed) + " km/h");
-        System.out.println("Maximum Speed: " + FormatNumber.formatNumber(maxSpeed) + " km/h");
-        System.out.println("Minimum Speed: " + FormatNumber.formatNumber(minSpeed) + " km/h");
-        System.out.println("\n");
+        routeVehicleStatistics.put("avgSpeed", averageSpeed);
+        routeVehicleStatistics.put("maxSpeed", maxSpeed);
+        routeVehicleStatistics.put("minSpeed", minSpeed);
     }
 
     /**
      * function to get speed statistics for a specific route
      * @param route The route for which speed statistics are required
      */
-    public void getRouteSpeedStatistics(@NotNull Route route) {
-        ArrayList<SimpleDoubleProperty> savedSpeeds = this.routeSpeeds.get(route);
+    public void getRouteStatistics(@NotNull Route route) {
+        ArrayList<Detection> detections = getAllDetectionsByRouteFromDb(route.getName());
 
-        if (savedSpeeds == null || savedSpeeds.isEmpty()) {
-            System.out.println("No statistics for route " + route.getName());
+        if (detections.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", "No statistics for route " + route.getName());
+            routeStatistics.put("avgSpeed", 0.0);
+            routeStatistics.put("maxSpeed", 0.0);
+            routeStatistics.put("minSpeed", 0.0);
+
             return;
         }
 
@@ -229,25 +201,23 @@ public class TutorSystem {
         double maxSpeed = Double.MIN_VALUE;
         double minSpeed = Double.MAX_VALUE;
 
-        for (SimpleDoubleProperty speed : savedSpeeds) {
-            totalSpeed += speed.get();
+        for (Detection detection : detections) {
+            totalSpeed += detection.getSpeed();
 
-            if (speed.get() > maxSpeed) {
-                maxSpeed = speed.get();
+            if (detection.getSpeed() > maxSpeed) {
+                maxSpeed = detection.getSpeed();
             }
 
-            if (speed.get() < minSpeed) {
-                minSpeed = speed.get();
+            if (detection.getSpeed() < minSpeed) {
+                minSpeed = detection.getSpeed();
             }
         }
 
-        double averageSpeed = totalSpeed / savedSpeeds.size();
+        double averageSpeed = totalSpeed / detections.size();
 
-        System.out.println("Speed statistics for route " + route.getName() + ":");
-        System.out.println("Average Speed: " + FormatNumber.formatNumber(averageSpeed) + " km/h");
-        System.out.println("Maximum Speed: " + FormatNumber.formatNumber(maxSpeed) + " km/h");
-        System.out.println("Minimum Speed: " + FormatNumber.formatNumber(minSpeed) + " km/h");
-        System.out.println("\n");
+        routeStatistics.put("avgSpeed", averageSpeed);
+        routeStatistics.put("maxSpeed", maxSpeed);
+        routeStatistics.put("minSpeed", minSpeed);
     }
 
     /**
@@ -314,10 +284,9 @@ public class TutorSystem {
      * @param policeStation The police station to send the infractions
      */
     public void detectSpeed(Double detectedSpeed, @NotNull Route route, @NotNull Vehicle vehicle, @NotNull PoliceStation policeStation) {
-        this.setVehicleRouteSpeed(detectedSpeed, route, vehicle);
-        this.setRouteSpeeds(detectedSpeed, route);
+        insertDetectionIntoDb(new Detection(vehicle.getPlate(), route.getName(), detectedSpeed));
 
-        String message = "Speeding detected: " + FormatNumber.formatNumber(detectedSpeed) + " km/h - Vehicle: " + vehicle.getPlate() + " - Route: " + route.getName() + " - Speed limit: " + FormatNumber.formatNumber(route.getSpeedLimit()) + " km/h\n";
+        String message = "Speeding detected: " + formatNumber(detectedSpeed) + " km/h - Vehicle: " + vehicle.getPlate() + " - Route: " + route.getName() + " - Speed limit: " + formatNumber(route.getSpeedLimit()) + " km/h\n";
         System.out.println(message);
         if (detectedSpeed > route.getSpeedLimit()) {
             Infraction infraction = new Infraction(vehicle.getPlate(), detectedSpeed, message, route);
