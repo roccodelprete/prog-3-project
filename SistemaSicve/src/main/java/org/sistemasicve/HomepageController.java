@@ -74,6 +74,12 @@ public class HomepageController {
     private TextField signUpSurname;
 
     /**
+     * The phone number text field into sign up tab
+     */
+    @FXML
+    private TextField signUpPhoneNumber;
+
+    /**
      * function to perform actions when the view is initialized
      */
     @FXML
@@ -94,10 +100,10 @@ public class HomepageController {
             if (user != null) {
                 try {
                     if (BCrypt.checkpw(loginPassword.getText(), user.getPassword())) {
+                        LoggedUser.getInstance().setUser(user);
                         if (user.getEmail().equals("admin@admin.com")) {
                             handleOpenAllRoutesTable(event);
                         } else {
-                            LoggedUser.getInstance().setUser(user);
                             System.out.println("[" + new Date() + "] User " + LoggedUser.getInstance().getUser().getEmail() + " logged in");
                             handleOpenUserView(event);
                         }
@@ -128,25 +134,26 @@ public class HomepageController {
 
             if (user == null) {
                try {
-                   User newUser = insertUserIntoDb(new User(
+                   insertUserIntoDb(new User(
                       signUpName.getText(),
                       signUpSurname.getText(),
                       signUpEmail.getText(),
                       signUpPassword.getText(),
-                       false
+                       false,
+                      signUpPhoneNumber.getText()
                    ));
 
-                   System.out.println("[" + new Date() + "] User " + newUser.getEmail() + " inserted in the database");
-                   showAlert(Alert.AlertType.CONFIRMATION, "User created", "User created successfully!");
                    handleOpenUserView(event);
                } catch (Exception e) {
-                    showAlert(Alert.AlertType.ERROR, "Error", "Error in creating user: " + e.getMessage());
+                    showAlert(Alert.AlertType.ERROR, "Error", "Error in creating user");
                     System.out.println("[" + new Date() + "] Error in creating user: " + e.getMessage());
+                    e.printStackTrace();
                } finally {
                     signUpEmail.setText("");
                     signUpName.setText("");
                     signUpSurname.setText("");
                     signUpPassword.setText("");
+                    signUpPhoneNumber.setText("");
                }
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "User already exists");
@@ -155,6 +162,7 @@ public class HomepageController {
                 signUpName.clear();
                 signUpSurname.clear();
                 signUpPassword.clear();
+                signUpPhoneNumber.clear();
             }
         } catch (Exception e) {
             System.out.println("[" + new Date() + "] Error in sign up: ");

@@ -87,7 +87,7 @@ public class EnterRouteController {
         Twilio.init(twilioSID, twilioToken);
 
         String fromPhoneNumber = "+12019043530";
-        String toPhoneNumber = "+393349109813";
+        String toPhoneNumber = LoggedUser.getInstance().getUser().getPhoneNumber();
         String messageText = "Your vehicle " + vehiclesList.getSelectionModel().getSelectedItem() + " has entered the route " + routesList.getSelectionModel().getSelectedItem();
 
         try {

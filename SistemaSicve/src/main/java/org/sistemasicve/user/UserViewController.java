@@ -169,7 +169,7 @@ public class UserViewController {
             Twilio.init(twilioSID, twilioToken);
 
             String fromPhoneNumber = "+12019043530";
-            String toPhoneNumber = "+393349109813";
+            String toPhoneNumber = LoggedUser.getInstance().getUser().getPhoneNumber();
             String messageText = "Your vehicle " + Trip.getInstance().getVehicle().getPlate() + " has exited the route " + Trip.getInstance().getRoute().getName();
             TutorStation tutorStation = new TutorStation();
             tutorStation.detach(Trip.getInstance().getVehicle());

@@ -48,14 +48,14 @@ public class Test {
     public static void main(String[] args) {
         User user = getUserFromDb("rocco@gmail.com") == null
                 ? insertUserIntoDb(
-                        new User("Rocco", "Del Prete", "rocco@gmail.com", "rocco", false
+                        new User("Rocco", "Del Prete", "rocco@gmail.com", "rocco", false, "3333333333"
                     ))
                 : getUserFromDb("rocco@gmail.com");
 
         Admin admin = new Admin(
                 getUserFromDb("admin@admin.com") == null
                     ? insertUserIntoDb(
-                        new User("Admin", "Admin", "admin@admin.com", "admin", false))
+                        new User("Admin", "Admin", "admin@admin.com", "admin", false, "3333333333"))
                     : getUserFromDb("admin@admin.com"));
 
         TutorSystem tutorSystem = new TutorSystem();

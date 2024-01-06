@@ -1,5 +1,6 @@
 package utils;
 
+import observer_memento.pattern.LoggedUser;
 import observer_memento.pattern.User;
 import org.mindrot.jbcrypt.BCrypt;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ public class UserTableOperations {
      * @return The user inserted into the database
      */
     public static @NotNull User insertUserIntoDb(@NotNull User user) {
-        String insertQuery = "INSERT INTO user (email, password, name, surname) VALUES (?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO user (email, password, name, surname, phone_number) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement preparedStatement = db.insert(insertQuery)) {
             String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
@@ -36,14 +37,18 @@ public class UserTableOperations {
             preparedStatement.setString(2, hashedPassword);
             preparedStatement.setString(3, user.getUserName());
             preparedStatement.setString(4, user.getSurname());
+            preparedStatement.setString(5, user.getPhoneNumber());
 
             preparedStatement.executeUpdate();
 
             preparedStatement.close();
 
-            System.out.println("User " + user.getEmail() + " inserted in the database");
+            LoggedUser.getInstance().setUser(user);
+
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "User created", "User created successfully!");
+            System.out.println("[" + new Date() + "] User " + user.getEmail() + " inserted in the database");
         } catch (Exception e) {
-            System.out.println("Error in insert vehicle into database: " + e.getMessage());
+            System.out.println("[" + new Date() + "] Error in insert user into database: " + e.getMessage());
         }
 
         return user;
@@ -63,12 +68,13 @@ public class UserTableOperations {
                 String surname = resultSet.getString("surname");
                 String storedPassword = resultSet.getString("password");
                 boolean sendMeNotification = resultSet.getBoolean("receive_notification");
+                String phoneNumber = resultSet.getString("phone_number");
 
-                return new User(name, surname, email, storedPassword, sendMeNotification);
+                return new User(name, surname, email, storedPassword, sendMeNotification, phoneNumber);
             }
 
         } catch (Exception e) {
-            System.out.println("Error in getting user from database: " + e.getMessage());
+            System.out.println("[" + new Date() + "] Error in getting user from database: " + e.getMessage());
         }
 
         return null;
@@ -90,12 +96,13 @@ public class UserTableOperations {
                 String email = resultSet.getString("email");
                 String storedPassword = resultSet.getString("password");
                 boolean sendMeNotification = resultSet.getBoolean("receive_notification");
+                String phoneNumber = resultSet.getString("phone_number");
 
-                users.add(new User(name, surname, email, storedPassword, sendMeNotification));
+                users.add(new User(name, surname, email, storedPassword, sendMeNotification, phoneNumber));
             }
 
         } catch (Exception e) {
-            System.out.println("Error in getting user from database: " + e.getMessage());
+            System.out.println("[" + new Date() + "] Error in getting user from database: " + e.getMessage());
         }
 
         return users;

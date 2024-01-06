@@ -31,6 +31,11 @@ public class User {
     private SimpleBooleanProperty sendMeNotification;
 
     /**
+     * The user phone number
+     */
+    private SimpleStringProperty phoneNumber;
+
+    /**
      * Constructor
      * @param name The name of the user
      * @param surname The user surname
@@ -38,12 +43,13 @@ public class User {
      * @param password The user password
      * @param sendMeNotification The user choice to receive notification
      */
-    public User(String name, String surname, String email, String password, boolean sendMeNotification) {
+    public User(String name, String surname, String email, String password, boolean sendMeNotification, String phoneNumber) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.email = new SimpleStringProperty(email);
         this.password = new SimpleStringProperty(password);
         this.sendMeNotification = new SimpleBooleanProperty(sendMeNotification);
+        this.phoneNumber = new SimpleStringProperty(phoneNumber);
     }
 
     /**
@@ -100,5 +106,21 @@ public class User {
      */
     public void setSendMeNotification(boolean sendMeNotification) {
         this.sendMeNotification.set(sendMeNotification);
+    }
+
+    /**
+     * Getter for the phoneNumber
+     * @return The phoneNumber
+     */
+    public String getPhoneNumber() {
+        return phoneNumber.get();
+    }
+
+    /**
+     * Setter for the phoneNumber
+     * @param phoneNumber The new phoneNumber
+     */
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber.set(phoneNumber);
     }
 }
