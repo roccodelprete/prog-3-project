@@ -1,6 +1,7 @@
 package utils;
 
 import command.pattern.Route;
+import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import singleton.pattern.Database;
@@ -25,7 +26,7 @@ public class RouteTableOperations {
      * @param route The route to insert
      */
     public static void insertRouteIntoDb(@NotNull Route route) {
-        String insertQuery = "INSERT INTO route (name, speed_limit, length) VALUES (?, ?, ?)";
+        String insertQuery = "INSERT INTO route (name, speed_limit, length, police_station) VALUES (?, ?, ?, ?)";
 
         try {
             PreparedStatement preparedStatement = db.insert(insertQuery);
@@ -33,17 +34,17 @@ public class RouteTableOperations {
             preparedStatement.setString(1, route.getName());
             preparedStatement.setString(2, route.getSpeedLimit().toString());
             preparedStatement.setString(3, route.getLength().toString());
+            preparedStatement.setString(4, route.getPoliceStation());
 
             preparedStatement.executeUpdate();
 
             preparedStatement.close();
 
             showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Route added successfully!");
-            System.out.println("[" + new Date() + "] Route " + route.getName() + " inserted in the database\n");
+            LoggerClass.log("Route " + route.getName() + " inserted into database", LoggerClass.LogType.INFO);
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Cannot insert route");
-            System.out.println("[" + new Date() + "] Error in insert route into database: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error in insert route into database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
     }
@@ -59,14 +60,15 @@ public class RouteTableOperations {
         try (ResultSet resultSet = db.query(selectQuery)) {
             if (resultSet.next()) {
                 String routeName = resultSet.getString("name");
-                Double speedLimit = resultSet.getDouble("speed_limit");
-                Double length = resultSet.getDouble("length");
+                int speedLimit = resultSet.getInt("speed_limit");
+                int length = resultSet.getInt("length");
+                String policeStation = resultSet.getString("police_station");
 
-                return new Route(routeName, speedLimit, length);
+
+                return new Route(routeName, speedLimit, length, policeStation);
             }
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in getting route from database: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error in getting route from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return null;
@@ -85,14 +87,14 @@ public class RouteTableOperations {
         try (ResultSet resultSet = db.query(selectQuery)) {
             while (resultSet.next()) {
                 String routeName = resultSet.getString("name");
-                Double speedLimit = Double.valueOf(resultSet.getString("speed_limit"));
-                Double length = Double.valueOf(resultSet.getString("length"));
+                int speedLimit = Integer.parseInt(resultSet.getString("speed_limit"));
+                int length = Integer.parseInt(resultSet.getString("length"));
+                String policeStation = resultSet.getString("police_station");
 
-                routes.add(new Route(routeName, speedLimit, length));
+                routes.add(new Route(routeName, speedLimit, length, policeStation));
             }
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in getting route from database: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error in getting all routes from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return routes;
@@ -104,63 +106,53 @@ public class RouteTableOperations {
      * @param name The new route name of the route
      * @param speedLimit The new speed limit of the route
      * @param length The new length of the route
+     * @param policeStation The new police station of the route
      * @return The route updated
      */
-    public static @NotNull Route updateRouteInDb(@NotNull Route route, @Nullable String name, @Nullable Double speedLimit, @Nullable Double length) {
-        String updateQuery = null;
+    public static @NotNull Route updateRouteInDb(@NotNull Route route, @Nullable String name, Integer speedLimit, Integer length, String policeStation) {
+        String updateQuery = "UPDATE route SET ";
 
-        if (name != null && speedLimit != null && length != null) {
-            updateQuery = "UPDATE route SET name = '" + name + "', speed_limit = '" + speedLimit + "', length = '" + length + "' WHERE name = '" + route.getName() + "'";
+        ArrayList<String> updateFields = new ArrayList<>();
+
+        if (name != null) {
+            updateFields.add("name = '" + name + "'");
             route.setName(name);
-            route.setSpeedLimit(speedLimit);
-            route.setLength(length);
         }
 
-        if (name == null && speedLimit != null && length != null) {
-            updateQuery = "UPDATE route SET speed_limit = '" + speedLimit + "', length = '" + length + "' WHERE name = '" + route.getName() + "'";
-            route.setSpeedLimit(speedLimit);
-            route.setLength(length);
-        }
-
-        if (name != null && speedLimit == null && length != null) {
-            updateQuery = "UPDATE route SET name = '" + name + "', length = '" + length + "' WHERE name = '" + route.getName() + "'";
-            route.setName(name);
-            route.setLength(length);
-        }
-
-        if (name != null && speedLimit != null && length == null) {
-            updateQuery = "UPDATE route SET name = '" + name + "', speed_limit = '" + speedLimit + "' WHERE name = '" + route.getName() + "'";
-            route.setName(name);
+        if (speedLimit != null) {
+            updateFields.add("speed_limit = '" + speedLimit + "'");
             route.setSpeedLimit(speedLimit);
         }
 
-        if (name == null && speedLimit == null && length != null) {
-            updateQuery = "UPDATE route SET length = '" + length + "' WHERE name = '" + route.getName() + "'";
+        if (length != null) {
+            updateFields.add("length = '" + length + "'");
             route.setLength(length);
         }
 
-        if (name == null && speedLimit != null && length == null) {
-            updateQuery = "UPDATE route SET speed_limit = '" + speedLimit + "' WHERE name = '" + route.getName() + "'";
-            route.setSpeedLimit(speedLimit);
+        if (policeStation != null) {
+            updateFields.add("police_station = '" + policeStation + "'");
+            route.setPoliceStation(policeStation);
         }
 
-        if (name != null && speedLimit == null && length == null) {
-            updateQuery = "UPDATE route SET name = '" + name + "' WHERE name = '" + route.getName() + "'";
-            route.setName(name);
+        if (updateFields.isEmpty()) {
+            showAlert(Alert.AlertType.INFORMATION, "No Changes", "No changes to update.");
+            return route;
         }
+
+        updateQuery += String.join(", ", updateFields) + " WHERE name = '" + route.getName() + "'";
 
         try {
             db.updateOrDelete(updateQuery);
-            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Route updated successfully!");
-            System.out.println("[" + new Date() + "] Route " + route.getName() + " updated in the database\n");
+            showAlert(Alert.AlertType.CONFIRMATION, "Success", "Route updated successfully!");
+            LoggerClass.log("Route " + route.getName() + " updated in the database", LoggerClass.LogType.INFO);
         } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Cannot update route: " + e.getMessage());
-            System.out.println("[" + new Date() + "] Error updating route in database: " + e.getMessage());
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot update route");
+            LoggerClass.log("Error updating route " + route.getName() + " in the database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return route;
     }
+
 
     /**
      * function to delete a route from the database
@@ -172,11 +164,10 @@ public class RouteTableOperations {
         try {
             db.updateOrDelete(deleteQuery);
             showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Route deleted successfully!");
-            System.out.println("[" + new Date() + "] Route " + route.getName() + " deleted from the database\n");
+            LoggerClass.log("Route " + route.getName() + " deleted from the database", LoggerClass.LogType.INFO);
         } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete route");
-            System.out.println("[" + new Date() + "] Error in delete route from database: " + e.getMessage());
-            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete the route");
+            LoggerClass.log("Error deleting route " + route.getName() + " from the database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
     }
 }

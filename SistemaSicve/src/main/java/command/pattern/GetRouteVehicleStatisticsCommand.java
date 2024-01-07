@@ -3,7 +3,7 @@ package command.pattern;
 import observer_memento.pattern.Vehicle;
 
 /**
- * Command to get speed statistics
+ * Command to get route speed statistics by vehicle
  * @author Rocco Del Prete
  */
 public class GetRouteVehicleStatisticsCommand implements Command {

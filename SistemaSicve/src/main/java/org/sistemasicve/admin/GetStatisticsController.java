@@ -12,12 +12,13 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
+import utils.FormatSpeed;
 
 import java.io.IOException;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.FormatNumber.formatNumber;
+import static utils.FormatSpeed.formatSpeed;
 import static utils.UserTableOperations.getUserFromDb;
 import static utils.VehicleTableOperations.getVehicleFromDb;
 import static utils.VehicleTableOperations.getVehiclesFromDb;
@@ -116,9 +117,9 @@ public class GetStatisticsController {
 
                 admin.executeCommand(getRouteVehicleStatisticsCommand);
 
-                avgVehicleSpeed.setText(formatNumber(tutorSystem.getRouteVehicleStatistics().get("avgSpeed")));
-                minVehicleSpeed.setText(formatNumber(tutorSystem.getRouteVehicleStatistics().get("minSpeed")));
-                maxVehicleSpeed.setText(formatNumber(tutorSystem.getRouteVehicleStatistics().get("maxSpeed")));
+                avgVehicleSpeed.setText(formatSpeed(tutorSystem.getRouteVehicleStatistics().get("avgSpeed"), FormatSpeed.SpeedUnit.KMH));
+                minVehicleSpeed.setText(formatSpeed(tutorSystem.getRouteVehicleStatistics().get("minSpeed"), FormatSpeed.SpeedUnit.KMH));
+                maxVehicleSpeed.setText(formatSpeed(tutorSystem.getRouteVehicleStatistics().get("maxSpeed"), FormatSpeed.SpeedUnit.KMH));
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Error in getting route vehicle statistics: " + e.getMessage());
             }
@@ -139,9 +140,9 @@ public class GetStatisticsController {
         admin.addCommand(getRouteStatisticsCommand);
         admin.executeCommand(getRouteStatisticsCommand);
 
-        avgSpeed.setText(formatNumber(tutorSystem.getRouteStatistics().get("avgSpeed")));
-        minSpeed.setText(formatNumber(tutorSystem.getRouteStatistics().get("minSpeed")));
-        maxSpeed.setText(formatNumber(tutorSystem.getRouteStatistics().get("maxSpeed")));
+        avgSpeed.setText(formatSpeed(tutorSystem.getRouteStatistics().get("avgSpeed"), FormatSpeed.SpeedUnit.KMH));
+        minSpeed.setText(formatSpeed(tutorSystem.getRouteStatistics().get("minSpeed"), FormatSpeed.SpeedUnit.KMH));
+        maxSpeed.setText(formatSpeed(tutorSystem.getRouteStatistics().get("maxSpeed"), FormatSpeed.SpeedUnit.KMH));
     }
 
     /**
@@ -206,7 +207,7 @@ public class GetStatisticsController {
      */
     @FXML
     void handleGoBack(@NotNull ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/org/sistemasicve/all-routes-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/org/sistemasicve/route-views/all-routes-view.fxml"));
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
 

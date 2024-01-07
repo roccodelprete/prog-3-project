@@ -10,14 +10,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
+import static utils.PoliceStationTableOperations.getAllPoliceStationsFromDb;
 import static utils.RouteTableOperations.getRouteFromDb;
 import static utils.UserTableOperations.getUserFromDb;
 
@@ -53,6 +56,12 @@ public class AddRouteController {
     private Button addButton;
 
     /**
+     * The police stations list
+     */
+    @FXML
+    private ComboBox<String> policeStationsList;
+
+    /**
      * The result of the add route operation
      */
     private Route addedRoute;
@@ -61,6 +70,10 @@ public class AddRouteController {
     void initialize() {
         setCursorStyleOnHover(cancelButton, Cursor.HAND);
         setCursorStyleOnHover(addButton, Cursor.HAND);
+
+        for (PoliceStation policeStation : getAllPoliceStationsFromDb()) {
+            policeStationsList.getItems().add(policeStation.getName());
+        }
     }
 
     /**
@@ -78,8 +91,9 @@ public class AddRouteController {
                     tutorSystem,
                     new Route(
                             routeName.getText(),
-                            Double.parseDouble(routeSpeedLimit.getText()),
-                            Double.parseDouble(routeLength.getText())
+                            Integer.parseInt(routeSpeedLimit.getText()),
+                            Integer.parseInt(routeLength.getText()),
+                            policeStationsList.getSelectionModel().getSelectedItem()
                     )
             );
 
@@ -95,7 +109,7 @@ public class AddRouteController {
             showAlert(Alert.AlertType.ERROR, "Invalid input", "Please enter a valid route length or route speed limit!");
         } finally {
             if (addedRoute != null) {
-                Parent root = FXMLLoader.load(getClass().getResource("/org/sistemasicve/all-routes-view.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/org/sistemasicve/route-views/all-routes-view.fxml"));
                 Node source = (Node) event.getSource();
                 Stage stage = (Stage) source.getScene().getWindow();
 
@@ -112,7 +126,7 @@ public class AddRouteController {
      */
     @FXML
     public void handleCancelAction(@NotNull ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/org/sistemasicve/all-routes-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/org/sistemasicve/route-views/all-routes-view.fxml"));
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
 

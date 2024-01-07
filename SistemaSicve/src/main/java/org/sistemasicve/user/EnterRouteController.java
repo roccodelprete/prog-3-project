@@ -3,6 +3,7 @@ package org.sistemasicve.user;
 import command.pattern.PoliceStation;
 import command.pattern.Route;
 import command.pattern.TutorSystem;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,9 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.CountDownLatch;
 
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import observer_memento.pattern.LoggedUser;
 import observer_memento.pattern.Trip;
@@ -24,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import utils.LoggerClass;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
@@ -57,6 +61,11 @@ public class EnterRouteController {
      */
     @FXML
     private ComboBox<String> vehiclesList;
+
+    /**
+     * The current route which the vehicle is moving
+     */
+    private Route currentRoute;
 
     /**
      * Function to perform when the controller is initialized
@@ -94,6 +103,8 @@ public class EnterRouteController {
             Trip.getInstance().setRoute(getRouteFromDb(routesList.getSelectionModel().getSelectedItem()));
             Trip.getInstance().setVehicle(getVehicleFromDb(vehiclesList.getSelectionModel().getSelectedItem()));
 
+            currentRoute = Trip.getInstance().getRoute();
+
             TutorStation tutorStation = new TutorStation();
             tutorStation.attach(Trip.getInstance().getVehicle());
 
@@ -105,8 +116,8 @@ public class EnterRouteController {
                         .create();
 
                 tutorStation.notifyObserver(Trip.getInstance().getVehicle(), "Your vehicle " + Trip.getInstance().getVehicle().getPlate() + " has entered the route " + Trip.getInstance().getRoute().getName());
-                showAlert(Alert.AlertType.CONFIRMATION, "Message sent", "Message sent to " + toPhoneNumber);
-                System.out.println("[" + new Date() + "] INFO: Message sent to " + toPhoneNumber + " with SID " + message.getSid() + " and status " + message.getStatus());
+                showAlert(Alert.AlertType.CONFIRMATION, "Message sent", "Message sent to " + message.getTo());
+                LoggerClass.log("Message sent to " + message.getTo(), LoggerClass.LogType.INFO);
             }
 
             try {
@@ -117,26 +128,24 @@ public class EnterRouteController {
 
                 stage.setScene(new Scene(root));
             } catch (IOException e) {
-                System.out.println("[" + new Date() + "] ERROR: ");
-                e.printStackTrace();
+                LoggerClass.log("Error loading user view: " + e.getMessage(), LoggerClass.LogType.ERROR);
             }
 
             Trip.getInstance().setContinueMoving(true);
+
             new Thread(() -> {
                 while (Trip.getInstance().getContinueMoving()) {
-                    moveVehicleContinuously(Trip.getInstance().getVehicle(), Trip.getInstance().getRoute(), getPoliceStationFromDb("Police Station 1"));
                     try {
+                        moveVehicleContinuously();
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
-                        System.out.println("[" + new Date() + "] ERROR: " + e.getMessage());
-                        e.printStackTrace();
+                        LoggerClass.log("Error moving vehicle continuously: " + e.getMessage(), LoggerClass.LogType.ERROR);
                     }
                 }
             }).start();
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Error sending message to " + toPhoneNumber);
-            System.out.println("[" + new Date() + "] ERROR: Error sending message to " + toPhoneNumber);
-            e.printStackTrace();
+            LoggerClass.log("Error sending message to " + toPhoneNumber + ": " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
     }
 
@@ -156,37 +165,30 @@ public class EnterRouteController {
 
     /**
      * function to move a vehicle on a route
-     * @param vehicle The vehicle to move
-     * @param route The route where the vehicle is moving
-     * @param policeStation The police station to send the infraction if committed
      */
-    private void moveVehicleOnRoute(
-            @NotNull Vehicle vehicle,
-            @NotNull Route route,
-            @NotNull PoliceStation policeStation
-    ) {
-        Double detectedSpeed = Math.random() * 130.0 + 60.0;
+    private void moveVehicleOnRoute() {
+        int detectedSpeed = (int) (Math.random() * 130 + 60);
 
-        vehicle.moveVehicle();
+        Trip.getInstance().getVehicle().moveVehicle();
 
         TutorSystem tutorSystem = new TutorSystem();
-        tutorSystem.detectSpeed(detectedSpeed, route, vehicle, getPoliceStationFromDb("Police Station 1"));
+        tutorSystem.detectSpeed(detectedSpeed, Trip.getInstance().getRoute(), Trip.getInstance().getVehicle());
+
+        if (Trip.getInstance().getVehicle().getCurrentMilestone() >= currentRoute.getLength()) {
+            Trip.getInstance().getVehicle().setCurrentMilestone(0);
+        }
     }
 
     /**
      * Function to move a vehicle continuously
-     * @param vehicle The vehicle to move
-     * @param route The route where the vehicle is moving
-     * @param policeStation The police station to send the infraction if committed
      */
-    private void moveVehicleContinuously(Vehicle vehicle, Route route, PoliceStation policeStation) {
+    private void moveVehicleContinuously() {
         while (Trip.getInstance().getContinueMoving()) {
-            EnterRouteController controller = new EnterRouteController();
-            controller.moveVehicleOnRoute(vehicle, route, policeStation);
             try {
+                moveVehicleOnRoute();
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                System.out.println("[" + new Date() + "] ERROR: " + e.getMessage());
+                LoggerClass.log("Error moving vehicle continuously: " + e.getMessage(), LoggerClass.LogType.ERROR);
                 e.printStackTrace();
             }
         }

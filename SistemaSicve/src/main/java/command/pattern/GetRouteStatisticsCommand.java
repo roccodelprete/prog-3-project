@@ -1,7 +1,7 @@
 package command.pattern;
 
 /**
- * Command to get speed statistics
+ * Command to route get speed statistics
  * @author Rocco Del Prete
  */
 public class GetRouteStatisticsCommand implements Command {

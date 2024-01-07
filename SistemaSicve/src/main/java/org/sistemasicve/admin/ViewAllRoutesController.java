@@ -1,6 +1,6 @@
 package org.sistemasicve.admin;
 
-import command.pattern.Route;
+import command.pattern.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,19 +10,22 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import strategy.pattern.RouteTable;
 import strategy.pattern.TableType;
+import utils.FormatLength;
+import utils.FormatSpeed;
 
 import java.io.IOException;
 
-import static utils.Alert.showAlert;
 import static utils.Alert.showConfirmationAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.FormatNumber.formatNumber;
+import static utils.FormatLength.formatLength;
+import static utils.FormatSpeed.formatSpeed;
 import static utils.RouteTableOperations.deleteRouteFromDb;
+import static utils.UserTableOperations.getUserFromDb;
 
 public class ViewAllRoutesController {
     /**
@@ -41,7 +44,7 @@ public class ViewAllRoutesController {
      * The route speed limit column
      */
     @FXML
-    private TableColumn<Route, Double> routeSpeedLimitColumn;
+    private TableColumn<Route, Integer> routeSpeedLimitColumn;
 
     /**
      * The edit button
@@ -65,7 +68,7 @@ public class ViewAllRoutesController {
      * The route length column
      */
     @FXML
-    private TableColumn<Route, Double> routeLengthColumn;
+    private TableColumn<Route, Integer> routeLengthColumn;
 
     /**
      * The add button
@@ -85,6 +88,15 @@ public class ViewAllRoutesController {
     private Route selectedRoute;
 
     /**
+     * The police station column
+     */
+    @FXML
+    private TableColumn<Route, String> policeStationColumn;
+
+    @FXML
+    private Button addPoliceStationButton;
+
+    /**
      * Function to initialize the view
      */
     @FXML
@@ -98,48 +110,50 @@ public class ViewAllRoutesController {
 
         routeNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         routeLengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
-        routeLengthColumn.setCellFactory(col -> new TableCell<Route, Double>() {
+        routeLengthColumn.setCellFactory(col -> new TableCell<Route, Integer>() {
             @Override
-            protected void updateItem(Double item, boolean empty) {
+            protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if (item == null || empty) {
                     setText(null);
                 } else {
-                    setText(formatNumber(item) + " km");
+                    setText(formatLength(item, FormatLength.LengthUnit.KM));
                 }
             }
         });
 
         routeSpeedLimitColumn.setCellValueFactory(new PropertyValueFactory<>("speedLimit"));
-        routeSpeedLimitColumn.setCellFactory(col -> new TableCell<Route, Double>() {
+        routeSpeedLimitColumn.setCellFactory(col -> new TableCell<Route, Integer>() {
             @Override
-            protected void updateItem(Double item, boolean empty) {
+            protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if (item == null || empty) {
                     setText(null);
                 } else {
-                    setText(formatNumber(item) + " km/h");
+                    setText(formatSpeed(item, FormatSpeed.SpeedUnit.KMH));
                 }
             }
         });
+        policeStationColumn.setCellValueFactory(new PropertyValueFactory<>("policeStation"));
 
         setCursorStyleOnHover(addRouteButton, Cursor.HAND);
         setCursorStyleOnHover(editRouteButton, Cursor.HAND);
         setCursorStyleOnHover(deleteRouteButton, Cursor.HAND);
         setCursorStyleOnHover(getRouteStatisticsButton, Cursor.HAND);
         setCursorStyleOnHover(logoutButton, Cursor.HAND);
+        setCursorStyleOnHover(addPoliceStationButton, Cursor.HAND);
 
         routeTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                setSelectedRoute(newSelection);
+                selectedRoute = newSelection;
                 addRouteButton.setVisible(true);
                 editRouteButton.setVisible(true);
                 deleteRouteButton.setVisible(true);
                 getRouteStatisticsButton.setVisible(true);
             } else {
-                setSelectedRoute(null);
+                selectedRoute = null;
             }
         });
     }
@@ -150,7 +164,7 @@ public class ViewAllRoutesController {
      */
     @FXML
     public void handleAddRoute(@NotNull ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/add-route-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/route-views/add-route-view.fxml"));
         Parent addRouteView = loader.load();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -163,7 +177,7 @@ public class ViewAllRoutesController {
 
         Route addedRoute = addRouteController.getAddedRoute();
         if (addedRoute != null) {
-            setRouteTableItem(addedRoute);
+            routeTable.getItems().add(addedRoute);
         }
     }
 
@@ -173,7 +187,7 @@ public class ViewAllRoutesController {
      */
     @FXML
     public void handleEditRoute(@NotNull ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/edit-route-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/route-views/edit-route-view.fxml"));
         Parent editRouteView = loader.load();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -201,17 +215,18 @@ public class ViewAllRoutesController {
         boolean confirmation = showConfirmationAlert(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to delete this route?");
 
         if (selectedRoute != null && confirmation) {
-            try {
-                deleteRouteFromDb(selectedRoute);
-            } catch (Exception e) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete route: " + e.getMessage());
-            } finally {
-                routeTable.getItems().remove(selectedRoute);
-                routeTable.getSelectionModel().clearSelection();
-                editRouteButton.setVisible(false);
-                deleteRouteButton.setVisible(false);
-                getRouteStatisticsButton.setVisible(false);
-            }
+            Admin admin = new Admin(getUserFromDb("admin@admin.com"));
+            TutorSystem tutorSystem = new TutorSystem();
+
+            Command deleteRouteCommand = new DeleteRouteCommand(
+                    tutorSystem,
+                    selectedRoute
+            );
+
+            admin.addCommand(deleteRouteCommand);
+            admin.executeCommand(deleteRouteCommand);
+
+            routeTable.getItems().remove(selectedRoute);
         }
     }
 
@@ -221,7 +236,7 @@ public class ViewAllRoutesController {
      */
     @FXML
     void handleGetRouteStatistics(@NotNull ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/route-statistics-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/route-views/route-statistics-view.fxml"));
         Parent routeStatisticsView = loader.load();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -241,22 +256,6 @@ public class ViewAllRoutesController {
     }
 
     /**
-     * Function to set a route table item
-     * @param route The route to set
-     */
-    public void setRouteTableItem(Route route) {
-        routeTable.getItems().add(route);
-    }
-
-    /**
-     * Function to set selected route
-     * @param route The route to set
-     */
-    public void setSelectedRoute(@Nullable Route route) {
-        this.selectedRoute = route;
-    }
-
-    /**
      * Function to handle the logout button
      * @param event The event to handle
      */
@@ -268,6 +267,21 @@ public class ViewAllRoutesController {
         Stage stage = (Stage) node.getScene().getWindow();
 
         stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+    /**
+     * Function to handle the add police station button
+     * @param event The event to handle
+     */
+    @FXML
+    void handleAddPoliceStation(@NotNull ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/add-police-station-view.fxml"));
+        Parent addPoliceStationView = loader.load();
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+
+        stage.setScene(new Scene(addPoliceStationView));
         stage.show();
     }
 }

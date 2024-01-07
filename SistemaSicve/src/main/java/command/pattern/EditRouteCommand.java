@@ -27,12 +27,17 @@ public class EditRouteCommand implements Command {
     /**
      * The new route speed limit
      */
-    private @Nullable Double newRouteSpeedLimit;
+    private @Nullable Integer newRouteSpeedLimit;
 
     /**
      * The new route length
      */
-    private @Nullable Double newRouteLength;
+    private @Nullable Integer newRouteLength;
+
+    /**
+     * The new route police station
+     */
+    private @Nullable String newRoutePoliceStation;
 
     /**
      * EditRouteCommand constructor
@@ -41,13 +46,22 @@ public class EditRouteCommand implements Command {
      * @param newRouteName The new route name
      * @param newRouteSpeedLimit The new route speed limit
      * @param newRouteLength The new route length
+     * @param newRoutePoliceStation The new route police station
      */
-    public EditRouteCommand(TutorSystem tutorSystem, Route route, @Nullable String newRouteName, @Nullable Double newRouteSpeedLimit, @Nullable Double newRouteLength) {
+    public EditRouteCommand(
+            TutorSystem tutorSystem,
+            Route route,
+            @Nullable String newRouteName,
+            @Nullable Integer newRouteSpeedLimit,
+            @Nullable Integer newRouteLength,
+            @Nullable String newRoutePoliceStation
+    ) {
         this.tutorSystem = tutorSystem;
         this.route = route;
         this.newRouteName = newRouteName;
         this.newRouteSpeedLimit = newRouteSpeedLimit;
         this.newRouteLength = newRouteLength;
+        this.newRoutePoliceStation = newRoutePoliceStation;
     }
 
     /**
@@ -55,6 +69,6 @@ public class EditRouteCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.editRoute(route, newRouteName, newRouteSpeedLimit, newRouteLength);
+        tutorSystem.editRoute(route, newRouteName, newRouteSpeedLimit, newRouteLength, newRoutePoliceStation);
     }
 }

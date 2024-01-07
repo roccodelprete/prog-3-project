@@ -9,9 +9,10 @@
    <children>
       <TableView fx:id="routeTable" layoutY="-1.0" prefHeight="551.0" prefWidth="960.0">
         <columns>
-          <TableColumn fx:id="routeNameColumn" minWidth="320.0" prefWidth="320.0" text="Route Name" />
-          <TableColumn fx:id="routeSpeedLimitColumn" minWidth="320.0" prefWidth="320.0" text="Route Speed Limit" />
-            <TableColumn fx:id="routeLengthColumn" minWidth="320.0" prefWidth="320.0" text="Route Length" />
+          <TableColumn fx:id="routeNameColumn" minWidth="240.0" prefWidth="240.0" text="Route Name" />
+          <TableColumn fx:id="routeSpeedLimitColumn" minWidth="240.0" prefWidth="240.0" text="Route Speed Limit" />
+            <TableColumn fx:id="routeLengthColumn" minWidth="240.0" prefWidth="240.0" text="Route Length" />
+            <TableColumn fx:id="policeStationColumn" minWidth="240.0" prefWidth="240.0" text="Police Station" />
         </columns>
       </TableView>
       <Button fx:id="addRouteButton" layoutX="834.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleAddRoute" prefHeight="40.0" prefWidth="112.0" text="Add Route">
@@ -35,6 +36,11 @@
          </font>
       </Button>
       <Button fx:id="logoutButton" layoutX="14.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleLogout" prefHeight="40.0" prefWidth="112.0" text="Logout">
+         <font>
+            <Font name="Century Gothic" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="addPoliceStationButton" layoutX="292.0" layoutY="568.0" mnemonicParsing="false" onAction="#handleAddPoliceStation" prefHeight="40.0" prefWidth="157.0" text="Add Police Station">
          <font>
             <Font name="Century Gothic" size="13.0" />
          </font>

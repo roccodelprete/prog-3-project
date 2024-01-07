@@ -1,8 +1,10 @@
 package observer_memento.pattern;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.jetbrains.annotations.NotNull;
+import utils.LoggerClass;
 
 import java.util.Date;
 
@@ -31,12 +33,12 @@ public class Vehicle implements VehicleObserver {
     /**
      * The last distance traveled by the vehicle
      */
-    private SimpleDoubleProperty lastDistanceTraveled = new SimpleDoubleProperty(0);
+    private SimpleIntegerProperty lastDistanceTraveled = new SimpleIntegerProperty(0);
 
     /**
      * The current milestone of the vehicle
      */
-    private SimpleDoubleProperty currentMilestone = new SimpleDoubleProperty(0);
+    private SimpleIntegerProperty currentMilestone = new SimpleIntegerProperty(0);
 
     /**
      * The user email who owns the vehicle
@@ -113,8 +115,16 @@ public class Vehicle implements VehicleObserver {
      * Getter for the current milestone
      * @return The current milestone
      */
-    public Double getCurrentMilestone() {
+    public Integer getCurrentMilestone() {
         return currentMilestone.get();
+    }
+
+    /**
+     * Setter for the current milestone
+     * @param currentMilestone The current milestone to set
+     */
+    public void setCurrentMilestone(Integer currentMilestone) {
+        this.currentMilestone = new SimpleIntegerProperty(currentMilestone);
     }
 
     /**
@@ -123,15 +133,15 @@ public class Vehicle implements VehicleObserver {
      */
     @Override
     public void update(@NotNull SimpleStringProperty message) {
-        System.out.println("[" + new Date() + "] " + message.get());
+        LoggerClass.log("Vehicle " + this.plate.get() + " received the message: " + message.get(), LoggerClass.LogType.INFO);
     }
 
     /**
      * function to emulate the vehicle movement
      */
     public void moveVehicle() {
-        this.lastDistanceTraveled = new SimpleDoubleProperty(Math.random() * 100);
-        this.currentMilestone = new SimpleDoubleProperty(this.currentMilestone.get() + this.lastDistanceTraveled.get());
+        this.lastDistanceTraveled = new SimpleIntegerProperty((int) (Math.random() * 100));
+        this.currentMilestone = new SimpleIntegerProperty(this.currentMilestone.get() + this.lastDistanceTraveled.get());
     }
 
     /**
@@ -149,19 +159,19 @@ public class Vehicle implements VehicleObserver {
         /**
          * The memento last distance traveled of the vehicle
          */
-        private SimpleDoubleProperty mementoLastDistanceTraveled;
+        private SimpleIntegerProperty mementoLastDistanceTraveled;
 
         /**
          * The memento current milestone of the vehicle
          */
-        private SimpleDoubleProperty mementoCurrentMilestone;
+        private SimpleIntegerProperty mementoCurrentMilestone;
 
         /**
          * Constructor
          */
         public VehicleMemento() {
-            this.mementoLastDistanceTraveled = new SimpleDoubleProperty(lastDistanceTraveled.get());
-            this.mementoCurrentMilestone = new SimpleDoubleProperty(currentMilestone.get());
+            this.mementoLastDistanceTraveled = new SimpleIntegerProperty(lastDistanceTraveled.get());
+            this.mementoCurrentMilestone = new SimpleIntegerProperty(currentMilestone.get());
         }
 
         /**
@@ -169,8 +179,8 @@ public class Vehicle implements VehicleObserver {
          */
         @Override
         public void restore() {
-            lastDistanceTraveled = new SimpleDoubleProperty(mementoLastDistanceTraveled.get());
-            currentMilestone = new SimpleDoubleProperty(mementoCurrentMilestone.get());
+            lastDistanceTraveled = new SimpleIntegerProperty(mementoLastDistanceTraveled.get());
+            currentMilestone = new SimpleIntegerProperty(mementoCurrentMilestone.get());
         }
     }
 }

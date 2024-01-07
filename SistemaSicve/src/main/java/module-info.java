@@ -12,7 +12,6 @@ module org.example.sistemasicve {
 
     opens org.sistemasicve to javafx.fxml;
     exports command.pattern;
-    opens app to javafx.fxml;
     opens command.pattern;
     opens strategy.pattern;
     opens utils;

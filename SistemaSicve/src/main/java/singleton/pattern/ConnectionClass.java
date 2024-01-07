@@ -1,5 +1,7 @@
 package singleton.pattern;
 
+import utils.LoggerClass;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -45,10 +47,10 @@ public class ConnectionClass {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sicve","root", "prog-3");
-            System.out.println("Connection successful!\n");
+            LoggerClass.log("Database connected", LoggerClass.LogType.INFO);
         }
         catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+            LoggerClass.log("Database connection error: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return connection;

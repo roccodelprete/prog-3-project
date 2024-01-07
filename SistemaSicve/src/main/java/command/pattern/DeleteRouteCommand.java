@@ -1,10 +1,10 @@
 package command.pattern;
 
 /**
- * Command to remove a route
+ * Command to delete a route
  * @author Rocco Del Prete
  */
-public class RemoveRouteCommand implements Command {
+public class DeleteRouteCommand implements Command {
     /**
      * The tutor system
      */
@@ -20,7 +20,7 @@ public class RemoveRouteCommand implements Command {
      * @param tutorSystem The tutor system
      * @param route The route to remove
      */
-    public RemoveRouteCommand(TutorSystem tutorSystem, Route route) {
+    public DeleteRouteCommand(TutorSystem tutorSystem, Route route) {
         this.tutorSystem = tutorSystem;
         this.route = route;
     }
@@ -30,6 +30,6 @@ public class RemoveRouteCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.removeRoute(route);
+        tutorSystem.deleteRoute(route);
     }
 }

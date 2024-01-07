@@ -26,15 +26,15 @@ public class DetectionTableOperations {
 
             preparedStatement.setString(1, detection.getPlate());
             preparedStatement.setString(2, detection.getRouteName());
-            preparedStatement.setDouble(3, detection.getSpeed());
+            preparedStatement.setInt(3, detection.getSpeed());
 
             preparedStatement.executeUpdate();
 
             preparedStatement.close();
 
-            System.out.println("Detection inserted into database\n");
+            LoggerClass.log("Detection inserted into database", LoggerClass.LogType.INFO);
         } catch (Exception e) {
-            System.out.println("Error in insert detection into database: " + e.getMessage());
+            LoggerClass.log("Error in inserting detection into database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
     }
@@ -53,10 +53,10 @@ public class DetectionTableOperations {
 
         try (ResultSet resultSet = db.query(selectQuery)) {
             while (resultSet.next()) {
-                detections.add(new Detection(plate, routeName, resultSet.getDouble("detected_speed")));
+                detections.add(new Detection(plate, routeName, resultSet.getInt("detected_speed")));
             }
         } catch (Exception e) {
-            System.out.println("Error in getting detection from database: " + e.getMessage());
+            LoggerClass.log("Error in getting detection by route and vehicle from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return detections;
@@ -77,10 +77,10 @@ public class DetectionTableOperations {
             while (resultSet.next()) {
                 String routeName = resultSet.getString("route_name");
 
-                detections.add(new Detection(plate, routeName, resultSet.getDouble("detected_speed")));
+                detections.add(new Detection(plate, routeName, resultSet.getInt("detected_speed")));
             }
         } catch (Exception e) {
-            System.out.println("Error in getting route from database: " + e.getMessage());
+            LoggerClass.log("Error in getting detections by vehicle from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return detections;
@@ -100,10 +100,10 @@ public class DetectionTableOperations {
             while (resultSet.next()) {
                 String plate = resultSet.getString("vehicle_plate");
 
-                detections.add(new Detection(plate, routeName, resultSet.getDouble("detected_speed")));
+                detections.add(new Detection(plate, routeName, resultSet.getInt("detected_speed")));
             }
         } catch (Exception e) {
-            System.out.println("Error in getting route from database: " + e.getMessage());
+            LoggerClass.log("Error in getting detections by route from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return detections;

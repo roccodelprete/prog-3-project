@@ -1,6 +1,5 @@
 package org.sistemasicve.user;
 
-import command.pattern.Route;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -18,14 +17,12 @@ import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
 import strategy.pattern.TableType;
 import strategy.pattern.VehicleTable;
+import utils.LoggerClass;
 
 import java.io.IOException;
-import java.util.Date;
 
-import static utils.Alert.showAlert;
 import static utils.Alert.showConfirmationAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.RouteTableOperations.deleteRouteFromDb;
 import static utils.VehicleTableOperations.deleteVehicleFromDb;
 
 public class ViewAllVehiclesController {
@@ -125,8 +122,7 @@ public class ViewAllVehiclesController {
             try {
                 deleteVehicleFromDb(selectedVehicle);
             } catch (Exception e) {
-                System.out.println("[" + new Date() + "] Error deleting vehicle from database: " + e.getMessage());
-                e.printStackTrace();
+                LoggerClass.log("Error deleting vehicle: " + e.getMessage(), LoggerClass.LogType.ERROR);
             } finally {
                 vehicleTable.getItems().remove(selectedVehicle);
                 selectedVehicle = null;
@@ -143,7 +139,7 @@ public class ViewAllVehiclesController {
      */
     @FXML
     void handleEditVehicle(@NotNull ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/edit-vehicle-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/vehicle-views/edit-vehicle-view.fxml"));
         Parent editVehicleView = loader.load();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -166,7 +162,7 @@ public class ViewAllVehiclesController {
      */
     @FXML
     void handleAddVehicle(@NotNull ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/add-vehicle-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/vehicle-views/add-vehicle-view.fxml"));
         Parent addRouteView = loader.load();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();

@@ -1,9 +1,8 @@
 package command.pattern;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-
-import static utils.FormatNumber.formatNumber;
 
 /**
  * The detection class
@@ -24,7 +23,7 @@ public class Detection {
     /**
      * The speed of the vehicle detected
      */
-    private SimpleDoubleProperty speed;
+    private SimpleIntegerProperty speed;
 
     /**
      * Constructor
@@ -32,10 +31,10 @@ public class Detection {
      * @param routeName The route name
      * @param speed The speed of the vehicle detected
      */
-    public Detection(String plate, String routeName, double speed) {
+    public Detection(String plate, String routeName, int speed) {
         this.plate = new SimpleStringProperty(plate);
         this.routeName = new SimpleStringProperty(routeName);
-        this.speed = new SimpleDoubleProperty(speed);
+        this.speed = new SimpleIntegerProperty(speed);
     }
 
     /**
@@ -58,7 +57,7 @@ public class Detection {
      * Getter for the speed of the vehicle detected
      * @return The speed of the vehicle detected
      */
-    public double getSpeed() {
+    public int getSpeed() {
         return speed.get();
     }
 }

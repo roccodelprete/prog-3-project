@@ -7,16 +7,15 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
 import javafx.stage.Stage;
+import utils.LoggerClass;
 
 import java.io.IOException;
 
-import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
 import static utils.VehicleTableOperations.updateVehicleInDb;
 
@@ -79,8 +78,7 @@ public class EditVehicleController {
             updateVehicleInDb(vehicle, vehiclePlate, vehicleBrand, vehicleModel);
             handleOpenVehiclesView(event);
         } catch (Exception e) {
-            System.out.println("[" + new java.util.Date() + "] Error updating vehicle: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error updating vehicle in database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         } finally {
             this.vehiclePlate.clear();
             this.vehicleBrand.clear();
@@ -94,7 +92,7 @@ public class EditVehicleController {
      */
     @FXML
     void handleCancelButton(@NotNull ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/all-vehicles-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/vehicle-views/all-vehicles-view.fxml"));
         Parent viewAllVehiclesView = loader.load();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -121,7 +119,7 @@ public class EditVehicleController {
      * @param event The event that triggered the function
      */
     private void handleOpenVehiclesView(@NotNull ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/all-vehicles-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/vehicle-views/all-vehicles-view.fxml"));
         Parent viewAllVehiclesView = loader.load();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();

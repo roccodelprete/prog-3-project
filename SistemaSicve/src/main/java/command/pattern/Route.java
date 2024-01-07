@@ -20,23 +20,29 @@ public class Route {
     /**
      * The route length
      */
-    private SimpleDoubleProperty length;
+    private SimpleIntegerProperty length;
 
     /**
      * The route speed limit
      */
-    private SimpleDoubleProperty speedLimit;
+    private SimpleIntegerProperty speedLimit;
 
     /**
-     * Route constructor
+     * The police station id who controls the route
+     */
+    private SimpleStringProperty policeStation;
+
+    /**
+     * Constructor
      * @param name The route name
      * @param speedLimit The route speed limit
      * @param length The route length
      */
-    public Route(String name, Double speedLimit, Double length) {
+    public Route(String name, int speedLimit, int length, String policeStation) {
         this.name = new SimpleStringProperty(name);
-        this.speedLimit = new SimpleDoubleProperty(speedLimit);
-        this.length = new SimpleDoubleProperty(length);
+        this.speedLimit = new SimpleIntegerProperty(speedLimit);
+        this.length = new SimpleIntegerProperty(length);
+        this.policeStation = new SimpleStringProperty(policeStation);
     }
 
     /**
@@ -49,7 +55,7 @@ public class Route {
     /**
      * function to get the route length
      */
-    public Double getLength() {
+    public Integer getLength() {
         return length.get();
     }
 
@@ -64,7 +70,7 @@ public class Route {
     /**
      * function to get the route speed limit
      */
-    public Double getSpeedLimit() {
+    public Integer getSpeedLimit() {
         return speedLimit.get();
     }
 
@@ -72,7 +78,7 @@ public class Route {
      * function to set the route speed limit
      * @param speedLimit The route speed limit to set
      */
-    public void setSpeedLimit(Double speedLimit) {
+    public void setSpeedLimit(int speedLimit) {
         this.speedLimit.set(speedLimit);
     }
 
@@ -80,8 +86,24 @@ public class Route {
      * function to set the route length
      * @param length The route length to set
      */
-    public void setLength(Double length) {
+    public void setLength(int length) {
         this.length.set(length);
+    }
+
+    /**
+     * function to get the police station who controls the route
+     * @return The police station who controls the route
+     */
+    public String getPoliceStation() {
+        return policeStation.get();
+    }
+
+    /**
+     * function to set the police station who controls the route
+     * @param policeStation The police station who controls the route
+     */
+    public void setPoliceStation(String policeStation) {
+        this.policeStation.set(policeStation);
     }
 
     /**

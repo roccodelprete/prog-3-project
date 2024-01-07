@@ -1,6 +1,7 @@
 package command.pattern;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -16,7 +17,7 @@ public class Infraction {
     /**
      * The vehicle speed
      */
-    private SimpleDoubleProperty speed;
+    private SimpleIntegerProperty speed;
 
     /**
      * The infraction message
@@ -28,9 +29,9 @@ public class Infraction {
      */
     private Route route;
 
-    public Infraction(String vehicleLicensePlate, Double speed, String message, Route route) {
+    public Infraction(String vehicleLicensePlate, int speed, String message, Route route) {
         this.vehiclePlate = new SimpleStringProperty(vehicleLicensePlate);
-        this.speed = new SimpleDoubleProperty(speed);
+        this.speed = new SimpleIntegerProperty(speed);
         this.message = new SimpleStringProperty(message);
         this.route = route;
     }
@@ -55,7 +56,7 @@ public class Infraction {
      * function to get the vehicle speed
      * @return The vehicle speed
      */
-    public Double getSpeed() {
+    public Integer getSpeed() {
         return speed.get();
     }
 

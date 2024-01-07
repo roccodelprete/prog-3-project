@@ -1,9 +1,10 @@
 package command.pattern;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
- * PoliceStation class to represent a police station
+ * Police station class to represent a police station
  * @author Rocco Del Prete
  */
 public class PoliceStation {
@@ -13,7 +14,7 @@ public class PoliceStation {
     private SimpleStringProperty name;
 
     /**
-     * PoliceStation constructor
+     * Constructor
      * @param name The police station name
      */
     public PoliceStation(String name) {
@@ -22,8 +23,17 @@ public class PoliceStation {
 
     /**
      * function to get the police station name
+     * @return The police station name
      */
     public String getName() {
         return name.get();
+    }
+
+    /**
+     * function to set the police station name
+     * @param name The police station name
+     */
+    public void setName(String name) {
+        this.name.set(name);
     }
 }

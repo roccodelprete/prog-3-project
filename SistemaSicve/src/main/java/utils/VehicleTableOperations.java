@@ -42,10 +42,10 @@ public class VehicleTableOperations {
 
             preparedStatement.close();
 
-            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Vehicle " + vehicle.getPlate() + " added successfully");
-            System.out.println("[" + new Date() + "] Vehicle " + vehicle.getPlate() + " inserted in the database");
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Vehicle " + vehicle.getPlate() + " added successfully!");
+            LoggerClass.log("Vehicle " + vehicle.getPlate() + " inserted into database", LoggerClass.LogType.INFO);
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in insert vehicle into database: " + e.getMessage());
+            LoggerClass.log("Error in insert vehicle into database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return vehicle;
@@ -69,8 +69,7 @@ public class VehicleTableOperations {
             }
 
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in getting vehicle from database: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error in getting vehicle from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return null;
@@ -96,8 +95,7 @@ public class VehicleTableOperations {
             }
 
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in getting vehicle from database: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error in getting vehicles from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return vehicles;
@@ -123,8 +121,7 @@ public class VehicleTableOperations {
             }
 
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in getting vehicle from database: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error in getting user vehicles from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return vehicles;
@@ -147,8 +144,7 @@ public class VehicleTableOperations {
             System.out.println("[" + new Date() + "] Vehicle " + vehiclePlate + " updated in the database");
         } catch (Exception e) {
             showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Cannot update vehicle");
-            System.out.println("[" + new Date() + "] Error updating vehicle in database: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error in update vehicle in database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return vehicle;
@@ -163,12 +159,11 @@ public class VehicleTableOperations {
 
         try {
             db.updateOrDelete(deleteQuery);
-            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Vehicle " + vehicle.getPlate() + " deleted successfully");
-            System.out.println("[" + new Date() + "] Vehicle " + vehicle.getPlate() + " deleted from the database");
+            showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Success", "Vehicle " + vehicle.getPlate() + " deleted successfully!");
+            LoggerClass.log("Vehicle " + vehicle.getPlate() + " deleted from the database", LoggerClass.LogType.INFO);
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete vehicle");
-            System.out.println("[" + new Date() + "] Error in delete vehicle from database: " + e.getMessage());
-            e.printStackTrace();
+            LoggerClass.log("Error deleting vehicle " + vehicle.getPlate() + " from the database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
     }
 }

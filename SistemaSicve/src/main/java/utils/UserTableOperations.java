@@ -46,9 +46,10 @@ public class UserTableOperations {
             LoggedUser.getInstance().setUser(user);
 
             showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "User created", "User created successfully!");
-            System.out.println("[" + new Date() + "] User " + user.getEmail() + " inserted in the database");
+            LoggerClass.log("User " + user.getEmail() + " inserted into database", LoggerClass.LogType.INFO);
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in insert user into database: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot insert user");
+            LoggerClass.log("Error in insert user into database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return user;
@@ -74,7 +75,7 @@ public class UserTableOperations {
             }
 
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in getting user from database: " + e.getMessage());
+            LoggerClass.log("Error in getting user from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return null;
@@ -102,7 +103,7 @@ public class UserTableOperations {
             }
 
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in getting user from database: " + e.getMessage());
+            LoggerClass.log("Error in getting all users from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return users;
@@ -118,10 +119,9 @@ public class UserTableOperations {
         String updateQuery = "UPDATE user SET receive_notification = " + choice + " WHERE email = '" + user.getEmail() + "'";
         try {
             db.updateOrDelete(updateQuery);
-
-            System.out.println("[" + new Date() + "] User " + user.getEmail() + " updated in the database");
+            LoggerClass.log(user.getEmail() + " user choice updated in database", LoggerClass.LogType.INFO);
         } catch (SQLException e) {
-            System.out.println("[" + new Date() + "] Error in updating user: " + e.getMessage());
+            LoggerClass.log("Error in updating user: " + e.getMessage(), LoggerClass.LogType.ERROR);
             showAlert(Alert.AlertType.ERROR, "Error", "Cannot update user: " + e.getMessage());
         } finally {
             user.setSendMeNotification(choice);

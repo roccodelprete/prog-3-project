@@ -7,6 +7,8 @@ import singleton.pattern.Database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Class to perform operations on the police_station table
@@ -32,9 +34,10 @@ public class PoliceStationTableOperations {
 
             preparedStatement.close();
 
-            System.out.println("Police station " + policeStation.getName() + " inserted in the database\n");
+            Alert.showAlert(javafx.scene.control.Alert.AlertType.CONFIRMATION, "Police station added", "Police station added successfully!");
+            LoggerClass.log("Police station inserted into database", LoggerClass.LogType.INFO);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            LoggerClass.log("Error in insert police station into database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return policeStation;
@@ -56,9 +59,33 @@ public class PoliceStationTableOperations {
             }
 
         } catch (Exception e) {
-            System.out.println("Error in getting police station from database: " + e.getMessage());
+            LoggerClass.log("Error in getting police station from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
 
         return null;
+    }
+
+    /**
+     * Function to gt all the police stations from the database
+     * @return The list of police stations from the database
+     */
+    public static @NotNull ArrayList<PoliceStation> getAllPoliceStationsFromDb() {
+        String selectQuery = "SELECT * FROM police_station";
+
+        ArrayList<PoliceStation> policeStations = new ArrayList<>();
+
+        try (ResultSet resultSet = db.query(selectQuery)) {
+            while (resultSet.next()) {
+                String policeStationName = resultSet.getString("name");
+
+                PoliceStation policeStation = new PoliceStation(policeStationName);
+
+                policeStations.add(policeStation);
+            }
+        } catch (Exception e) {
+            LoggerClass.log("Error in getting police stations from database: " + e.getMessage(), LoggerClass.LogType.ERROR);
+        }
+
+        return policeStations;
     }
 }

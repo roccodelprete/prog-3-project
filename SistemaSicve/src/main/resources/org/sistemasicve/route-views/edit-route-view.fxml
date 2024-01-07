@@ -60,5 +60,14 @@
             <Font name="Century Gothic" size="32.0" />
          </font>
       </Label>
+      <ComboBox fx:id="policeStationsList" layoutX="198.0" layoutY="321.0" prefHeight="29.0" prefWidth="226.0" />
+      <Label layoutX="50.0" layoutY="315.0" prefHeight="40.0" prefWidth="138.0" text="Police station" textAlignment="CENTER">
+         <font>
+            <Font name="Century Gothic" size="15.0" />
+         </font>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </Label>
    </children>
 </AnchorPane>

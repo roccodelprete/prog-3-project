@@ -16,6 +16,7 @@ import observer_memento.pattern.LoggedUser;
 import observer_memento.pattern.User;
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
+import utils.LoggerClass;
 
 import java.util.Date;
 
@@ -102,23 +103,24 @@ public class HomepageController {
                     if (BCrypt.checkpw(loginPassword.getText(), user.getPassword())) {
                         LoggedUser.getInstance().setUser(user);
                         if (user.getEmail().equals("admin@admin.com")) {
+                            LoggerClass.log("Admin logged in", LoggerClass.LogType.INFO);
                             handleOpenAllRoutesTable(event);
                         } else {
-                            System.out.println("[" + new Date() + "] User " + LoggedUser.getInstance().getUser().getEmail() + " logged in");
+                            LoggerClass.log("User " + user.getEmail() + " logged in", LoggerClass.LogType.INFO);
                             handleOpenUserView(event);
                         }
                     } else {
                         showAlert(Alert.AlertType.ERROR, "Error", "Wrong password");
                     }
                 } catch (Exception e) {
-                    System.out.println("[" + new Date() + "] Error in login: ");
+                    LoggerClass.log("Error in login: " + e.getMessage(), LoggerClass.LogType.ERROR);
                     e.printStackTrace();
                 }
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "User not found");
             }
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in sign up: ");
+            LoggerClass.log("Error in login: " + e.getMessage(), LoggerClass.LogType.ERROR);
             e.printStackTrace();
         }
     }
@@ -165,7 +167,7 @@ public class HomepageController {
                 signUpPhoneNumber.clear();
             }
         } catch (Exception e) {
-            System.out.println("[" + new Date() + "] Error in sign up: ");
+            LoggerClass.log("Error in sign up: " + e.getMessage(), LoggerClass.LogType.ERROR);
             e.printStackTrace();
         }
     }
@@ -176,7 +178,7 @@ public class HomepageController {
      * @throws Exception The exception to throw
      */
     private void handleOpenAllRoutesTable(@NotNull ActionEvent event) throws Exception {
-        Parent allRoutesView = FXMLLoader.load(getClass().getResource("/org/sistemasicve/all-routes-view.fxml"));
+        Parent allRoutesView = FXMLLoader.load(getClass().getResource("/org/sistemasicve/route-views/all-routes-view.fxml"));
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
 

@@ -3,6 +3,8 @@ package org.sistemasicve.user;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import command.pattern.Infraction;
+import command.pattern.Route;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,15 +22,13 @@ import observer_memento.pattern.LoggedUser;
 import observer_memento.pattern.Trip;
 import observer_memento.pattern.TutorStation;
 import org.jetbrains.annotations.NotNull;
+import utils.LoggerClass;
 
 import java.io.IOException;
 import java.util.Date;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import command.pattern.PoliceStation;
-import command.pattern.Route;
-import observer_memento.pattern.Vehicle;
 import static utils.UserTableOperations.updateUserChoiceInDb;
 
 
@@ -100,15 +100,13 @@ public class UserViewController {
             try {
                 updateUserChoiceInDb(LoggedUser.getInstance().getUser(), true);
             } catch (Exception e) {
-                System.out.println("[" + new Date() + "] ERROR: ");
-                e.printStackTrace();
+                LoggerClass.log("Error updating user choice in database: " + e.getMessage(), LoggerClass.LogType.ERROR);
             }
         } else {
             try {
                 updateUserChoiceInDb(LoggedUser.getInstance().getUser(), false);
             } catch (Exception e) {
-                System.out.println("[" + new Date() + "] ERROR: ");
-                e.printStackTrace();
+                LoggerClass.log("Error updating user choice in database: " + e.getMessage(), LoggerClass.LogType.ERROR);
             }
         }
     }
@@ -119,7 +117,7 @@ public class UserViewController {
      */
     @FXML
     void handleAddVehicle(@NotNull ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/add-vehicle-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/vehicle-views/add-vehicle-view.fxml"));
         Parent root = loader.load();
         Node node = (Node) event.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
@@ -146,7 +144,7 @@ public class UserViewController {
      */
     @FXML
     void handleEnterRoute(@NotNull ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/enter-route-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/route-views/enter-route-view.fxml"));
         Parent root = loader.load();
         Node node = (Node) event.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
@@ -162,6 +160,7 @@ public class UserViewController {
     void handleExitRouteButton() {
         new Thread(() -> {
             Trip.getInstance().setContinueMoving(false);
+            LoggerClass.log("Vehicle " + Trip.getInstance().getVehicle().getPlate() + " exited the route " + Trip.getInstance().getRoute().getName(), LoggerClass.LogType.INFO);
 
             String twilioSID = "AC2eb490c92c14b104496daf9bbc8f681d";
             String twilioToken = "768f4a6fad548897bf23b30ad20a7c82";
@@ -174,8 +173,24 @@ public class UserViewController {
             TutorStation tutorStation = new TutorStation();
             tutorStation.detach(Trip.getInstance().getVehicle());
 
+            Route route = Trip.getInstance().getRoute();
+
 
             try {
+                if (Trip.getInstance().getInfractions().get(route).isEmpty()) {
+                    LoggerClass.log("No infractions committed on route " + route.getName() + " by vehicle " + Trip.getInstance().getVehicle().getPlate(), LoggerClass.LogType.INFO);
+                } else {
+                    Infraction mostSeriousInfraction = Trip.getInstance().getInfractions().get(route).getFirst();
+
+                    for (Infraction inf : Trip.getInstance().getInfractions().get(route)) {
+                        if (inf.getSpeed() > mostSeriousInfraction.getSpeed()) {
+                            mostSeriousInfraction = inf;
+                        }
+                    }
+
+                    LoggerClass.log("Send most serious infraction to police station " + route.getPoliceStation() + " - Infraction: " + mostSeriousInfraction.getMessage(), LoggerClass.LogType.INFO);
+                }
+
                 Platform.runLater(() -> {
                     if (LoggedUser.getInstance().getUser().getSendMeNotification()) {
                         Message message = Message.creator(
@@ -186,13 +201,12 @@ public class UserViewController {
 
                         tutorStation.notifyObserver(Trip.getInstance().getVehicle(), "Your vehicle " + Trip.getInstance().getVehicle().getPlate() + " has exited the route " + Trip.getInstance().getRoute().getName());
                         showAlert(Alert.AlertType.CONFIRMATION, "Message sent", "Message sent to " + toPhoneNumber);
-                        System.out.println("[" + new Date() + "] INFO: Message sent to " + toPhoneNumber + " with SID " + message.getSid() + " and status " + message.getStatus());
+                        LoggerClass.log("Message sent to " + message.getTo(), LoggerClass.LogType.INFO);
                     }
                 });
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Error sending message to " + toPhoneNumber);
-                System.out.println("[" + new Date() + "] ERROR: Error sending message to " + toPhoneNumber);
-                e.printStackTrace();
+                LoggerClass.log("Error sending message to", LoggerClass.LogType.ERROR);
             }
         }).start();
     }
@@ -203,7 +217,7 @@ public class UserViewController {
      */
     @FXML
     void handleOpenViewVehiclesList(@NotNull ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/all-vehicles-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/vehicle-views/all-vehicles-view.fxml"));
         Parent root = loader.load();
         Node node = (Node) event.getSource();
         Stage stage = (Stage) node.getScene().getWindow();

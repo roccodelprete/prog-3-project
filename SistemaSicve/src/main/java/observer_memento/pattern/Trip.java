@@ -1,6 +1,16 @@
 package observer_memento.pattern;
 
+import command.pattern.Infraction;
 import command.pattern.Route;
+import org.jetbrains.annotations.NotNull;
+import utils.LoggerClass;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static utils.CommitInfractionTableOperations.getMostSeriousInfractionFromDb;
+import static utils.RouteTableOperations.getAllRoutesFromDb;
 
 /**
  * Class that represents a trip
@@ -34,6 +44,11 @@ public class Trip {
      * The vehicle
      */
     private Vehicle vehicle;
+
+    /**
+     * The infractions committed by the vehicle during the trip
+     */
+    private Map<Route, ArrayList<Infraction>> infractions = new HashMap<>();
 
     /**
      * The trip constructor
@@ -129,5 +144,28 @@ public class Trip {
      */
     public void setContinueMoving(boolean continueMoving) {
         this.continueMoving = continueMoving;
+    }
+
+    /**
+     * Method that sets the infractions
+     * @param infraction The infraction committed
+     * @param route The route where the infraction was committed
+     */
+    public void setInfractions(@NotNull Infraction infraction, @NotNull Route route) {
+        if (infractions.get(route) == null) {
+            ArrayList<Infraction> infractionArrayList = new ArrayList<>();
+            infractionArrayList.add(infraction);
+            infractions.put(route, infractionArrayList);
+        } else {
+            infractions.get(route).add(infraction);
+        }
+    }
+
+    /**
+     * Method that returns the infractions
+     * @return the infractions
+     */
+    public Map<Route, ArrayList<Infraction>> getInfractions() {
+        return infractions;
     }
 }

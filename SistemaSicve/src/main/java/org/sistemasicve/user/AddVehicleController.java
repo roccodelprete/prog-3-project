@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import observer_memento.pattern.LoggedUser;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
+import utils.LoggerClass;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,11 +91,10 @@ public class AddVehicleController {
                 insertVehicleIntoDb(vehicleToAdd);
                 addedVehicle = vehicleToAdd;
             } catch (Exception e) {
-                System.out.println("[" + new Date() + "] ERROR: ");
-                e.printStackTrace();
+                LoggerClass.log("Error in inserting vehicle: " + e.getMessage(), LoggerClass.LogType.ERROR);
             } finally {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/all-vehicles-view.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/vehicle-views/all-vehicles-view.fxml"));
                     Parent root = loader.load();
 
                     Node node = (Node) event.getSource();
@@ -102,13 +102,12 @@ public class AddVehicleController {
 
                     stage.setScene(new Scene(root));
                 } catch (IOException e) {
-                    System.out.println("[" + new Date() + "] ERROR: ");
-                    e.printStackTrace();
+                   LoggerClass.log("Error in loading all vehicles view: " + e.getMessage(), LoggerClass.LogType.ERROR);
                 }
             }
         } else {
-            showAlert(Alert.AlertType.ERROR, "Error", "Vehicle " + vehicleToAdd.getPlate() + " already exists");
-            System.out.println("[" + new Date() + "] Error in inserting vehicle: Vehicle " + vehicleToAdd.getPlate() + " already exists");
+            showAlert(Alert.AlertType.ERROR, "Error", "Vehicle " + vehicleToAdd.getPlate() + " already exists!");
+            LoggerClass.log("Vehicle " + vehicleToAdd.getPlate() + " already exists!", LoggerClass.LogType.ERROR);
         }
     }
 
