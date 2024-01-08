@@ -12,22 +12,9 @@ import java.util.ArrayList;
  */
 public class Admin {
     /**
-     * The user associated to the admin
-     */
-    private User user;
-
-    /**
      * Commands list
      */
     private ArrayList<Command> commands = new ArrayList<>();
-
-    /**
-     * Constructor
-     * @param user The user associated to the admin
-     */
-    public Admin(User user) {
-        this.user = user;
-    }
 
     /**
      * function to add a new command
@@ -35,16 +22,6 @@ public class Admin {
      */
     public void addCommand(Command command) {
         commands.add(command);
-    }
-
-    /**
-     * function to execute all commands
-     */
-    public void executeCommands() {
-        for (Command command : commands) {
-            command.execute();
-            commands.remove(command);
-        }
     }
 
     /**

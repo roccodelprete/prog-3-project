@@ -215,7 +215,7 @@ public class ViewAllRoutesController {
         boolean confirmation = showConfirmationAlert(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to delete this route?");
 
         if (selectedRoute != null && confirmation) {
-            Admin admin = new Admin(getUserFromDb("admin@admin.com"));
+            Admin admin = new Admin();
             TutorSystem tutorSystem = new TutorSystem();
 
             Command deleteRouteCommand = new DeleteRouteCommand(

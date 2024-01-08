@@ -84,7 +84,7 @@ public class AddRouteController {
     @FXML
     public void handleAddRoute(ActionEvent event) throws IOException {
         try {
-            Admin admin = new Admin(getUserFromDb("admin@admin.com"));
+            Admin admin = new Admin();
             TutorSystem tutorSystem = new TutorSystem();
 
             Command addRouteCommand = new AddRouteCommand(

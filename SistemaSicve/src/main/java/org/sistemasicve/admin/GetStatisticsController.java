@@ -109,7 +109,7 @@ public class GetStatisticsController {
 
         if (selectedVehicle != null) {
             try {
-                Admin admin = new Admin(getUserFromDb("admin@admin.com"));
+                Admin admin = new Admin();
                 TutorSystem tutorSystem = new TutorSystem();
 
                 Command getRouteVehicleStatisticsCommand = new GetRouteVehicleStatisticsCommand(tutorSystem, route, getVehicleFromDb(selectedVehicle));
@@ -133,7 +133,7 @@ public class GetStatisticsController {
     public void setRoute(Route route) {
         this.route = route;
 
-        Admin admin = new Admin(getUserFromDb("admin@admin.com"));
+        Admin admin = new Admin();
         TutorSystem tutorSystem = new TutorSystem();
         Command getRouteStatisticsCommand = new GetRouteStatisticsCommand(tutorSystem, route);
 
@@ -151,54 +151,6 @@ public class GetStatisticsController {
      */
     public void setLabelTitle(String title) {
         this.statisticsTitleLabel.setText(title);
-    }
-
-    /**
-     * Setter for the route average speed
-     * @param avgSpeed The average speed to set
-     */
-    public void setAvgSpeed(double avgSpeed) {
-        this.avgSpeed.setText(String.valueOf(avgSpeed));
-    }
-
-    /**
-     * Setter for the route minimum speed
-     * @param minSpeed The minimum speed to set
-     */
-    public void setMinSpeed(double minSpeed) {
-        this.minSpeed.setText(String.valueOf(minSpeed));
-    }
-
-    /**
-     * Setter for the route maximum speed
-     * @param maxSpeed The maximum speed to set
-     */
-    public void setMaxSpeed(double maxSpeed) {
-        this.maxSpeed.setText(String.valueOf(maxSpeed));
-    }
-
-    /**
-     * Setter for the vehicle average speed
-     * @param avgVehicleSpeed The average speed to set
-     */
-    public void setAvgVehicleSpeed(double avgVehicleSpeed) {
-        this.avgVehicleSpeed.setText(String.valueOf(avgVehicleSpeed));
-    }
-
-    /**
-     * Setter for the vehicle minimum speed
-     * @param minVehicleSpeed The minimum speed to set
-     */
-    public void setMinVehicleSpeed(double minVehicleSpeed) {
-        this.minVehicleSpeed.setText(String.valueOf(minVehicleSpeed));
-    }
-
-    /**
-     * Setter for the vehicle maximum speed
-     * @param maxVehicleSpeed The maximum speed to set
-     */
-    public void setMaxVehicleSpeed(double maxVehicleSpeed) {
-        this.maxVehicleSpeed.setText(String.valueOf(maxVehicleSpeed));
     }
 
     /**

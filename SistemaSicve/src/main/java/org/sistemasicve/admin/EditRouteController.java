@@ -102,7 +102,7 @@ public class EditRouteController {
     @FXML
     void handleEditRoute(ActionEvent event) throws IOException {
         try {
-            Admin admin = new Admin(LoggedUser.getInstance().getUser());
+            Admin admin = new Admin();
             TutorSystem tutorSystem = new TutorSystem();
 
             String policeStationName = policeStationsList.getSelectionModel().getSelectedItem();
