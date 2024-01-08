@@ -90,63 +90,42 @@ public class EnterRouteController {
      */
     @FXML
     void handleEnterRoute(ActionEvent event) {
-        String twilioSID = "AC2eb490c92c14b104496daf9bbc8f681d";
-        String twilioToken = "768f4a6fad548897bf23b30ad20a7c82";
+        Trip.getInstance().setRoute(getRouteFromDb(routesList.getSelectionModel().getSelectedItem()));
+        Trip.getInstance().setVehicle(getVehicleFromDb(vehiclesList.getSelectionModel().getSelectedItem()));
 
-        Twilio.init(twilioSID, twilioToken);
+        currentRoute = Trip.getInstance().getRoute();
 
-        String fromPhoneNumber = "+12019043530";
-        String toPhoneNumber = LoggedUser.getInstance().getUser().getPhoneNumber();
-        String messageText = "Your vehicle " + vehiclesList.getSelectionModel().getSelectedItem() + " has entered the route " + routesList.getSelectionModel().getSelectedItem();
+        TutorStation tutorStation = new TutorStation();
+        tutorStation.attach(Trip.getInstance().getVehicle());
+
+        if (LoggedUser.getInstance().getUser().getSendMeNotification()) {
+            String messageText = "Your vehicle " + vehiclesList.getSelectionModel().getSelectedItem() + " has entered the route " + routesList.getSelectionModel().getSelectedItem();
+            tutorStation.notifyObserver(Trip.getInstance().getVehicle(), messageText);
+        }
 
         try {
-            Trip.getInstance().setRoute(getRouteFromDb(routesList.getSelectionModel().getSelectedItem()));
-            Trip.getInstance().setVehicle(getVehicleFromDb(vehiclesList.getSelectionModel().getSelectedItem()));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/user-view.fxml"));
+            Parent root = loader.load();
+            Node node = (Node) event.getSource();
+            Stage stage = (Stage) node.getScene().getWindow();
 
-            currentRoute = Trip.getInstance().getRoute();
-
-            TutorStation tutorStation = new TutorStation();
-            tutorStation.attach(Trip.getInstance().getVehicle());
-
-            if (LoggedUser.getInstance().getUser().getSendMeNotification()) {
-                Message message = Message.creator(
-                                new PhoneNumber(toPhoneNumber),
-                                new PhoneNumber(fromPhoneNumber),
-                                messageText)
-                        .create();
-
-                tutorStation.notifyObserver(Trip.getInstance().getVehicle(), "Your vehicle " + Trip.getInstance().getVehicle().getPlate() + " has entered the route " + Trip.getInstance().getRoute().getName());
-                showAlert(Alert.AlertType.CONFIRMATION, "Message sent", "Message sent to " + message.getTo());
-                LoggerClass.log("Message sent to " + message.getTo(), LoggerClass.LogType.INFO);
-            }
-
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/sistemasicve/user-view.fxml"));
-                Parent root = loader.load();
-                Node node = (Node) event.getSource();
-                Stage stage = (Stage) node.getScene().getWindow();
-
-                stage.setScene(new Scene(root));
-            } catch (IOException e) {
-                LoggerClass.log("Error loading user view: " + e.getMessage(), LoggerClass.LogType.ERROR);
-            }
-
-            Trip.getInstance().setContinueMoving(true);
-
-            new Thread(() -> {
-                while (Trip.getInstance().getContinueMoving()) {
-                    try {
-                        moveVehicleContinuously();
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        LoggerClass.log("Error moving vehicle continuously: " + e.getMessage(), LoggerClass.LogType.ERROR);
-                    }
-                }
-            }).start();
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Error sending message to " + toPhoneNumber);
-            LoggerClass.log("Error sending message to " + toPhoneNumber + ": " + e.getMessage(), LoggerClass.LogType.ERROR);
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            LoggerClass.log("Error loading user view: " + e.getMessage(), LoggerClass.LogType.ERROR);
         }
+
+        Trip.getInstance().setContinueMoving(true);
+
+        new Thread(() -> {
+            while (Trip.getInstance().getContinueMoving()) {
+                try {
+                    moveVehicleContinuously();
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    LoggerClass.log("Error moving vehicle continuously: " + e.getMessage(), LoggerClass.LogType.ERROR);
+                }
+            }
+        }).start();
     }
 
     /**
