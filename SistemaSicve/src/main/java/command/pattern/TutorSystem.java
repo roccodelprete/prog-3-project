@@ -18,6 +18,7 @@ import static utils.RouteTableOperations.*;
 
 /**
  * Class to represent the tutor system
+ * Receiver in the Command Pattern
  */
 public class TutorSystem {
     /**

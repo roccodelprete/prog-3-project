@@ -1,11 +1,13 @@
 package command.pattern;
 
 import observer_memento.pattern.User;
+import utils.LoggerClass;
 
 import java.util.ArrayList;
 
 /**
  * Class to represent the admin
+ * Invoker in the Command Pattern
  * @author Rocco Del Prete
  */
 public class Admin {
@@ -54,15 +56,7 @@ public class Admin {
             command.execute();
             commands.remove(command);
         } else {
-            System.out.println("Error executing command! Command not found in the system.\n");
+            LoggerClass.log("Command not found", LoggerClass.LogType.ERROR);
         }
-    }
-
-    /**
-     * Getter for the user
-     * @return The user
-     */
-    public User getUser() {
-        return user;
     }
 }
