@@ -117,14 +117,12 @@ public class HomepageController {
                     }
                 } catch (Exception e) {
                     LoggerClass.log("Error in login: " + e.getMessage(), LoggerClass.LogType.ERROR);
-                    e.printStackTrace();
                 }
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "User not found");
             }
         } catch (Exception e) {
             LoggerClass.log("Error in login: " + e.getMessage(), LoggerClass.LogType.ERROR);
-            e.printStackTrace();
         }
     }
 
@@ -138,32 +136,27 @@ public class HomepageController {
             User user = getUserFromDb(loginEmail.getText());
 
             if (user == null) {
-               try {
-                   insertUserIntoDb(new User(
-                      signUpName.getText(),
-                      signUpSurname.getText(),
-                      signUpEmail.getText(),
-                      signUpPassword.getText(),
-                       false,
-                      signUpPhoneNumber.getText(),
-                       false
-                   ));
+               insertUserIntoDb(new User(
+                  signUpName.getText(),
+                  signUpSurname.getText(),
+                  signUpEmail.getText(),
+                  signUpPassword.getText(),
+                   false,
+                  signUpPhoneNumber.getText(),
+                   false
+               ));
 
-                   handleOpenUserView(event);
-               } catch (Exception e) {
-                    showAlert(Alert.AlertType.ERROR, "Error", "Error in creating user");
-                    System.out.println("[" + new Date() + "] Error in creating user: " + e.getMessage());
-                    e.printStackTrace();
-               } finally {
-                    signUpEmail.setText("");
-                    signUpName.setText("");
-                    signUpSurname.setText("");
-                    signUpPassword.setText("");
-                    signUpPhoneNumber.setText("");
-               }
+               signUpEmail.setText("");
+               signUpName.setText("");
+               signUpSurname.setText("");
+               signUpPassword.setText("");
+               signUpPhoneNumber.setText("");
+
+               handleOpenUserView(event);
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "User already exists");
-                System.out.println("[" + new Date() + "] User " + user.getEmail() + " already exists in the database");
+                LoggerClass.log("User already exists", LoggerClass.LogType.ERROR);
+
                 signUpEmail.clear();
                 signUpName.clear();
                 signUpSurname.clear();
@@ -172,7 +165,6 @@ public class HomepageController {
             }
         } catch (Exception e) {
             LoggerClass.log("Error in sign up: " + e.getMessage(), LoggerClass.LogType.ERROR);
-            e.printStackTrace();
         }
     }
 
