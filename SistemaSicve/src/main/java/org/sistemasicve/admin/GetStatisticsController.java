@@ -12,16 +12,17 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
+import singleton.pattern.LoggedUser;
 import utils.FormatSpeed;
+import utils.Route;
 
 import java.io.IOException;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
 import static utils.FormatSpeed.formatSpeed;
-import static utils.UserTableOperations.getUserFromDb;
-import static utils.VehicleTableOperations.getVehicleFromDb;
-import static utils.VehicleTableOperations.getVehiclesFromDb;
+import static database.operations.VehicleTableOperations.getVehicleFromDb;
+import static database.operations.VehicleTableOperations.getVehiclesFromDb;
 
 public class GetStatisticsController {
     /**
@@ -109,17 +110,16 @@ public class GetStatisticsController {
 
         if (selectedVehicle != null) {
             try {
-                Admin admin = new Admin();
                 TutorSystem tutorSystem = new TutorSystem();
 
-                Command getRouteVehicleStatisticsCommand = new GetRouteVehicleStatisticsCommand(tutorSystem, route, getVehicleFromDb(selectedVehicle));
-                admin.addCommand(getRouteVehicleStatisticsCommand);
+                Command getRouteVehicleStatisticsCommand = new GetRouteVehicleStatisticsCommand(LoggedUser.getInstance().getAdmin(), route, getVehicleFromDb(selectedVehicle));
+                tutorSystem.addCommand(getRouteVehicleStatisticsCommand);
 
-                admin.executeCommand(getRouteVehicleStatisticsCommand);
+                tutorSystem.executeCommand(getRouteVehicleStatisticsCommand);
 
-                avgVehicleSpeed.setText(formatSpeed(tutorSystem.getRouteVehicleStatistics().get("avgSpeed"), FormatSpeed.SpeedUnit.KMH));
-                minVehicleSpeed.setText(formatSpeed(tutorSystem.getRouteVehicleStatistics().get("minSpeed"), FormatSpeed.SpeedUnit.KMH));
-                maxVehicleSpeed.setText(formatSpeed(tutorSystem.getRouteVehicleStatistics().get("maxSpeed"), FormatSpeed.SpeedUnit.KMH));
+                avgVehicleSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("avgSpeed"), FormatSpeed.SpeedUnit.KMH));
+                minVehicleSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("minSpeed"), FormatSpeed.SpeedUnit.KMH));
+                maxVehicleSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("maxSpeed"), FormatSpeed.SpeedUnit.KMH));
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Error in getting route vehicle statistics: " + e.getMessage());
             }
@@ -133,16 +133,15 @@ public class GetStatisticsController {
     public void setRoute(Route route) {
         this.route = route;
 
-        Admin admin = new Admin();
         TutorSystem tutorSystem = new TutorSystem();
-        Command getRouteStatisticsCommand = new GetRouteStatisticsCommand(tutorSystem, route);
+        Command getRouteStatisticsCommand = new GetRouteStatisticsCommand(LoggedUser.getInstance().getAdmin(), route);
 
-        admin.addCommand(getRouteStatisticsCommand);
-        admin.executeCommand(getRouteStatisticsCommand);
+        tutorSystem.addCommand(getRouteStatisticsCommand);
+        tutorSystem.executeCommand(getRouteStatisticsCommand);
 
-        avgSpeed.setText(formatSpeed(tutorSystem.getRouteStatistics().get("avgSpeed"), FormatSpeed.SpeedUnit.KMH));
-        minSpeed.setText(formatSpeed(tutorSystem.getRouteStatistics().get("minSpeed"), FormatSpeed.SpeedUnit.KMH));
-        maxSpeed.setText(formatSpeed(tutorSystem.getRouteStatistics().get("maxSpeed"), FormatSpeed.SpeedUnit.KMH));
+        avgSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("avgSpeed"), FormatSpeed.SpeedUnit.KMH));
+        minSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("minSpeed"), FormatSpeed.SpeedUnit.KMH));
+        maxSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("maxSpeed"), FormatSpeed.SpeedUnit.KMH));
     }
 
     /**

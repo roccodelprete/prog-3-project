@@ -1,6 +1,6 @@
 package org.sistemasicve.admin;
 
-import command.pattern.PoliceStation;
+import utils.PoliceStation;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -18,8 +18,8 @@ import java.io.IOException;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.PoliceStationTableOperations.getPoliceStationFromDb;
-import static utils.PoliceStationTableOperations.insertPoliceStationIntoDb;
+import static database.operations.PoliceStationTableOperations.getPoliceStationFromDb;
+import static database.operations.PoliceStationTableOperations.insertPoliceStationIntoDb;
 
 public class AddPoliceStationController {
     /**

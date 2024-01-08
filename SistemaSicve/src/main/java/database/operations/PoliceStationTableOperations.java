@@ -1,13 +1,14 @@
-package utils;
+package database.operations;
 
-import command.pattern.PoliceStation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import singleton.pattern.Database;
+import utils.Alert;
+import utils.LoggerClass;
+import utils.PoliceStation;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**

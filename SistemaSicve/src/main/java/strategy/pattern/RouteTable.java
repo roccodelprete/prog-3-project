@@ -1,11 +1,11 @@
 package strategy.pattern;
 
-import command.pattern.Route;
+import utils.Route;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import static javafx.collections.FXCollections.observableArrayList;
-import static utils.RouteTableOperations.getAllRoutesFromDb;
+import static database.operations.RouteTableOperations.getAllRoutesFromDb;
 
 public class RouteTable implements Table<Route> {
     /**

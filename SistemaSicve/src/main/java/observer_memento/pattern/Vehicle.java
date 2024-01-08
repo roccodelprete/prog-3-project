@@ -1,12 +1,9 @@
 package observer_memento.pattern;
 
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.jetbrains.annotations.NotNull;
 import utils.LoggerClass;
-
-import java.util.Date;
 
 /**
  * Vehicle (Concrete observer) that receives

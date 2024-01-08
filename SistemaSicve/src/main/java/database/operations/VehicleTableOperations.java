@@ -1,11 +1,12 @@
-package utils;
+package database.operations;
 
-import observer_memento.pattern.LoggedUser;
-import observer_memento.pattern.User;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import singleton.pattern.Database;
+import utils.Alert;
+import utils.LoggerClass;
+import utils.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static utils.Alert.showAlert;
-import static utils.UserTableOperations.getUserFromDb;
 
 /**
  * Class to represent the database operations on the vehicle table

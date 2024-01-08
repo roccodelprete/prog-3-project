@@ -10,13 +10,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import singleton.pattern.LoggedUser;
 import strategy.pattern.RouteTable;
 import strategy.pattern.TableType;
 import utils.FormatLength;
 import utils.FormatSpeed;
+import utils.Route;
 
 import java.io.IOException;
 
@@ -24,8 +25,6 @@ import static utils.Alert.showConfirmationAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
 import static utils.FormatLength.formatLength;
 import static utils.FormatSpeed.formatSpeed;
-import static utils.RouteTableOperations.deleteRouteFromDb;
-import static utils.UserTableOperations.getUserFromDb;
 
 public class ViewAllRoutesController {
     /**
@@ -215,16 +214,15 @@ public class ViewAllRoutesController {
         boolean confirmation = showConfirmationAlert(Alert.AlertType.CONFIRMATION, "Confirmation", "Are you sure you want to delete this route?");
 
         if (selectedRoute != null && confirmation) {
-            Admin admin = new Admin();
             TutorSystem tutorSystem = new TutorSystem();
 
             Command deleteRouteCommand = new DeleteRouteCommand(
-                    tutorSystem,
+                    LoggedUser.getInstance().getAdmin(),
                     selectedRoute
             );
 
-            admin.addCommand(deleteRouteCommand);
-            admin.executeCommand(deleteRouteCommand);
+            tutorSystem.addCommand(deleteRouteCommand);
+            tutorSystem.executeCommand(deleteRouteCommand);
 
             routeTable.getItems().remove(selectedRoute);
         }

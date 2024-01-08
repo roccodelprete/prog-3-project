@@ -22,4 +22,9 @@ module org.example.sistemasicve {
     exports org.sistemasicve;
     exports org.sistemasicve.user;
     opens org.sistemasicve.user to javafx.fxml;
+    exports utils;
+    exports singleton.pattern;
+    opens singleton.pattern;
+    exports database.operations;
+    opens database.operations;
 }

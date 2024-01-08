@@ -1,17 +1,18 @@
-package utils;
+package database.operations;
 
-import observer_memento.pattern.LoggedUser;
-import observer_memento.pattern.User;
+import singleton.pattern.LoggedUser;
 import org.mindrot.jbcrypt.BCrypt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import singleton.pattern.Database;
+import utils.Alert;
+import utils.LoggerClass;
+import utils.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static utils.Alert.showAlert;
 
@@ -70,8 +71,9 @@ public class UserTableOperations {
                 String storedPassword = resultSet.getString("password");
                 boolean sendMeNotification = resultSet.getBoolean("receive_notification");
                 String phoneNumber = resultSet.getString("phone_number");
+                boolean isAdmin = resultSet.getBoolean("is_admin");
 
-                return new User(name, surname, email, storedPassword, sendMeNotification, phoneNumber);
+                return new User(name, surname, email, storedPassword, sendMeNotification, phoneNumber, isAdmin);
             }
 
         } catch (Exception e) {
@@ -98,8 +100,9 @@ public class UserTableOperations {
                 String storedPassword = resultSet.getString("password");
                 boolean sendMeNotification = resultSet.getBoolean("receive_notification");
                 String phoneNumber = resultSet.getString("phone_number");
+                boolean isAdmin = resultSet.getBoolean("is_admin");
 
-                users.add(new User(name, surname, email, storedPassword, sendMeNotification, phoneNumber));
+                users.add(new User(name, surname, email, storedPassword, sendMeNotification, phoneNumber, isAdmin));
             }
 
         } catch (Exception e) {

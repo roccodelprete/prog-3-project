@@ -13,16 +13,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import observer_memento.pattern.LoggedUser;
 import org.jetbrains.annotations.NotNull;
-import utils.LoggerClass;
+import singleton.pattern.LoggedUser;
+import utils.PoliceStation;
+import utils.Route;
 
 import java.io.IOException;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.PoliceStationTableOperations.getAllPoliceStationsFromDb;
-import static utils.UserTableOperations.getUserFromDb;
+import static database.operations.PoliceStationTableOperations.getAllPoliceStationsFromDb;
 
 public class EditRouteController {
     /**
@@ -102,13 +102,12 @@ public class EditRouteController {
     @FXML
     void handleEditRoute(ActionEvent event) throws IOException {
         try {
-            Admin admin = new Admin();
             TutorSystem tutorSystem = new TutorSystem();
 
             String policeStationName = policeStationsList.getSelectionModel().getSelectedItem();
 
             Command editCommand = new EditRouteCommand(
-                tutorSystem,
+                LoggedUser.getInstance().getAdmin(),
                 route,
                 routeName.getText(),
                 Integer.parseInt(routeSpeedLimit.getText()),
@@ -116,8 +115,8 @@ public class EditRouteController {
                 policeStationName
             );
 
-            admin.addCommand(editCommand);
-            admin.executeCommand(editCommand);
+            tutorSystem.addCommand(editCommand);
+            tutorSystem.executeCommand(editCommand);
         }  catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Invalid input", "Please enter a valid route length or route speed limit!");
         } finally {

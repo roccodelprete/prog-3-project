@@ -1,4 +1,7 @@
-package observer_memento.pattern;
+package singleton.pattern;
+
+import command.pattern.Admin;
+import utils.User;
 
 /**
  * Class that represents the logged user
@@ -12,9 +15,14 @@ public class LoggedUser {
     private static LoggedUser loggedUser;
 
     /**
-     * The user
+     * The user logged
      */
     private User user;
+
+    /**
+     * The admin logged
+     */
+    private Admin admin;
 
     private LoggedUser() {}
 
@@ -46,4 +54,19 @@ public class LoggedUser {
         this.user = user;
     }
 
+    /**
+     * Getter for the admin
+     * @return The admin logged
+     */
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    /**
+     * Setter for the admin
+     * @param admin The admin to set
+     */
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
 }

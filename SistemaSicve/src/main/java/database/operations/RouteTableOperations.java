@@ -1,17 +1,16 @@
-package utils;
+package database.operations;
 
-import command.pattern.Route;
-import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import singleton.pattern.Database;
+import utils.Alert;
+import utils.LoggerClass;
+import utils.Route;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static utils.Alert.showAlert;
 
@@ -109,37 +108,10 @@ public class RouteTableOperations {
      * @param policeStation The new police station of the route
      * @return The route updated
      */
-    public static @NotNull Route updateRouteInDb(@NotNull Route route, @Nullable String name, Integer speedLimit, Integer length, String policeStation) {
-        String updateQuery = "UPDATE route SET ";
-
-        ArrayList<String> updateFields = new ArrayList<>();
-
-        if (name != null) {
-            updateFields.add("name = '" + name + "'");
-            route.setName(name);
-        }
-
-        if (speedLimit != null) {
-            updateFields.add("speed_limit = '" + speedLimit + "'");
-            route.setSpeedLimit(speedLimit);
-        }
-
-        if (length != null) {
-            updateFields.add("length = '" + length + "'");
-            route.setLength(length);
-        }
-
-        if (policeStation != null) {
-            updateFields.add("police_station = '" + policeStation + "'");
-            route.setPoliceStation(policeStation);
-        }
-
-        if (updateFields.isEmpty()) {
-            showAlert(Alert.AlertType.INFORMATION, "No Changes", "No changes to update.");
-            return route;
-        }
-
-        updateQuery += String.join(", ", updateFields) + " WHERE name = '" + route.getName() + "'";
+    public static @NotNull Route updateRouteInDb(@NotNull Route route, String name, Integer speedLimit, Integer length, String policeStation) {
+        String updateQuery =
+                "UPDATE route SET name = '" + name + "', speed_limit = " + speedLimit + ", length = " + length + "," +
+                "police_station = '" + policeStation + "' WHERE name = '" + route.getName() + "'";
 
         try {
             db.updateOrDelete(updateQuery);

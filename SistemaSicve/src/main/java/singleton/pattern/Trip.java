@@ -1,16 +1,13 @@
-package observer_memento.pattern;
+package singleton.pattern;
 
-import command.pattern.Infraction;
-import command.pattern.Route;
+import observer_memento.pattern.Vehicle;
+import utils.Infraction;
+import utils.Route;
 import org.jetbrains.annotations.NotNull;
-import utils.LoggerClass;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static utils.CommitInfractionTableOperations.getMostSeriousInfractionFromDb;
-import static utils.RouteTableOperations.getAllRoutesFromDb;
 
 /**
  * Class that represents a trip

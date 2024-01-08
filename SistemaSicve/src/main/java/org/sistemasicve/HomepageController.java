@@ -1,5 +1,6 @@
 package org.sistemasicve;
 
+import command.pattern.Admin;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,8 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import observer_memento.pattern.LoggedUser;
-import observer_memento.pattern.User;
+import singleton.pattern.LoggedUser;
+import utils.User;
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 import utils.LoggerClass;
@@ -22,8 +23,8 @@ import java.util.Date;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.UserTableOperations.getUserFromDb;
-import static utils.UserTableOperations.insertUserIntoDb;
+import static database.operations.UserTableOperations.getUserFromDb;
+import static database.operations.UserTableOperations.insertUserIntoDb;
 
 public class HomepageController {
     /**
@@ -101,11 +102,13 @@ public class HomepageController {
             if (user != null) {
                 try {
                     if (BCrypt.checkpw(loginPassword.getText(), user.getPassword())) {
-                        LoggedUser.getInstance().setUser(user);
-                        if (user.getEmail().equals("admin@admin.com")) {
+                        if (user.getIsAdmin()) {
+                            Admin admin = new Admin(user);
+                            LoggedUser.getInstance().setAdmin(admin);
                             LoggerClass.log("Admin logged in", LoggerClass.LogType.INFO);
                             handleOpenAllRoutesTable(event);
                         } else {
+                            LoggedUser.getInstance().setUser(user);
                             LoggerClass.log("User " + user.getEmail() + " logged in", LoggerClass.LogType.INFO);
                             handleOpenUserView(event);
                         }
@@ -142,7 +145,8 @@ public class HomepageController {
                       signUpEmail.getText(),
                       signUpPassword.getText(),
                        false,
-                      signUpPhoneNumber.getText()
+                      signUpPhoneNumber.getText(),
+                       false
                    ));
 
                    handleOpenUserView(event);

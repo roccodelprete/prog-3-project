@@ -1,14 +1,16 @@
 package command.pattern;
 
+import utils.Route;
+
 /**
  * Command to add a route
  * @author Rocco Del Prete
  */
 public class AddRouteCommand implements Command {
     /**
-     * The tutor system
+     * The admin that will execute the command
      */
-    private TutorSystem tutorSystem;
+    private Admin admin;
 
     /**
      * The route to add
@@ -17,11 +19,11 @@ public class AddRouteCommand implements Command {
 
     /**
      * AddRouteCommand constructor
-     * @param tutorSystem The tutor system
+     * @param admin The admin that will execute the command
      * @param route The route to add
      */
-    public AddRouteCommand(TutorSystem tutorSystem, Route route) {
-        this.tutorSystem = tutorSystem;
+    public AddRouteCommand(Admin admin, Route route) {
+        this.admin = admin;
         this.route = route;
     }
 
@@ -30,6 +32,6 @@ public class AddRouteCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.addNewRoute(route);
+        admin.addNewRoute(route);
     }
 }

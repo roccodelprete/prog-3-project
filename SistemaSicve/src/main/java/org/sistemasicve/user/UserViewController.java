@@ -1,7 +1,7 @@
 package org.sistemasicve.user;
 
-import command.pattern.Infraction;
-import command.pattern.Route;
+import utils.Infraction;
+import utils.Route;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,15 +14,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import observer_memento.pattern.LoggedUser;
-import observer_memento.pattern.Trip;
+import singleton.pattern.LoggedUser;
+import singleton.pattern.Trip;
 import observer_memento.pattern.TutorStation;
 import org.jetbrains.annotations.NotNull;
 import utils.LoggerClass;
 
 import java.io.IOException;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.UserTableOperations.updateUserChoiceInDb;
+import static database.operations.UserTableOperations.updateUserChoiceInDb;
 
 
 public class UserViewController {

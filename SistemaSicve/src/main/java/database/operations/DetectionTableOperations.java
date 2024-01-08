@@ -1,8 +1,9 @@
-package utils;
+package database.operations;
 
-import command.pattern.Detection;
 import org.jetbrains.annotations.NotNull;
 import singleton.pattern.Database;
+import utils.Detection;
+import utils.LoggerClass;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

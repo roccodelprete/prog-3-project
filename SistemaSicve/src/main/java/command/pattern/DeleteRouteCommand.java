@@ -1,14 +1,16 @@
 package command.pattern;
 
+import utils.Route;
+
 /**
  * Command to delete a route
  * @author Rocco Del Prete
  */
 public class DeleteRouteCommand implements Command {
     /**
-     * The tutor system
+     * The admin that will execute the command
      */
-    private TutorSystem tutorSystem;
+    private Admin admin;
 
     /**
      * The route to remove
@@ -17,11 +19,11 @@ public class DeleteRouteCommand implements Command {
 
     /**
      * RemoveRouteCommand constructor
-     * @param tutorSystem The tutor system
+     * @param admin The admin that will execute the command
      * @param route The route to remove
      */
-    public DeleteRouteCommand(TutorSystem tutorSystem, Route route) {
-        this.tutorSystem = tutorSystem;
+    public DeleteRouteCommand(Admin admin, Route route) {
+        this.admin = admin;
         this.route = route;
     }
 
@@ -30,6 +32,6 @@ public class DeleteRouteCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.deleteRoute(route);
+        admin.deleteRoute(route);
     }
 }

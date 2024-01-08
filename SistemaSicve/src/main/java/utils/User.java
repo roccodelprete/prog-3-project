@@ -1,4 +1,4 @@
-package observer_memento.pattern;
+package utils;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -36,6 +36,11 @@ public class User {
     private SimpleStringProperty phoneNumber;
 
     /**
+     * The is admin flag
+     */
+    private SimpleBooleanProperty isAdmin;
+
+    /**
      * Constructor
      * @param name The name of the user
      * @param surname The user surname
@@ -43,13 +48,21 @@ public class User {
      * @param password The user password
      * @param sendMeNotification The user choice to receive notification
      */
-    public User(String name, String surname, String email, String password, boolean sendMeNotification, String phoneNumber) {
+    public User(
+            String name,
+            String surname,
+            String email,
+            String password,
+            boolean sendMeNotification,
+            String phoneNumber,
+            boolean isAdmin) {
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.email = new SimpleStringProperty(email);
         this.password = new SimpleStringProperty(password);
         this.sendMeNotification = new SimpleBooleanProperty(sendMeNotification);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
+        this.isAdmin = new SimpleBooleanProperty(isAdmin);
     }
 
     /**
@@ -122,5 +135,21 @@ public class User {
      */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber.set(phoneNumber);
+    }
+
+    /**
+     * Getter for the isAdmin
+     * @return The isAdmin
+     */
+    public boolean getIsAdmin() {
+        return isAdmin.get();
+    }
+
+    /**
+     * Setter for the isAdmin
+     * @param isAdmin The new isAdmin
+     */
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin.set(isAdmin);
     }
 }

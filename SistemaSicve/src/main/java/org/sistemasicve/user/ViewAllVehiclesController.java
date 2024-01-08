@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import static utils.Alert.showConfirmationAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.VehicleTableOperations.deleteVehicleFromDb;
+import static database.operations.VehicleTableOperations.deleteVehicleFromDb;
 
 public class ViewAllVehiclesController {
     /**

@@ -1,8 +1,7 @@
 package command.pattern;
 
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
 import org.jetbrains.annotations.Nullable;
+import utils.Route;
 
 /**
  * Command to edit a route
@@ -10,9 +9,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class EditRouteCommand implements Command {
     /**
-     * The tutor system
+     * The admin that will execute the command
      */
-    private TutorSystem tutorSystem;
+    private Admin admin;
 
     /**
      * The route to edit
@@ -22,26 +21,26 @@ public class EditRouteCommand implements Command {
     /**
      * The new route name
      */
-    private @Nullable String newRouteName;
+    private String newRouteName;
 
     /**
      * The new route speed limit
      */
-    private @Nullable Integer newRouteSpeedLimit;
+    private Integer newRouteSpeedLimit;
 
     /**
      * The new route length
      */
-    private @Nullable Integer newRouteLength;
+    private Integer newRouteLength;
 
     /**
      * The new route police station
      */
-    private @Nullable String newRoutePoliceStation;
+    private String newRoutePoliceStation;
 
     /**
      * EditRouteCommand constructor
-     * @param tutorSystem The tutor system
+     * @param admin The admin that will execute the command
      * @param route The route to edit
      * @param newRouteName The new route name
      * @param newRouteSpeedLimit The new route speed limit
@@ -49,14 +48,14 @@ public class EditRouteCommand implements Command {
      * @param newRoutePoliceStation The new route police station
      */
     public EditRouteCommand(
-            TutorSystem tutorSystem,
+            Admin admin,
             Route route,
-            @Nullable String newRouteName,
-            @Nullable Integer newRouteSpeedLimit,
-            @Nullable Integer newRouteLength,
-            @Nullable String newRoutePoliceStation
+            String newRouteName,
+            Integer newRouteSpeedLimit,
+            Integer newRouteLength,
+            String newRoutePoliceStation
     ) {
-        this.tutorSystem = tutorSystem;
+        this.admin = admin;
         this.route = route;
         this.newRouteName = newRouteName;
         this.newRouteSpeedLimit = newRouteSpeedLimit;
@@ -69,6 +68,6 @@ public class EditRouteCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.editRoute(route, newRouteName, newRouteSpeedLimit, newRouteLength, newRoutePoliceStation);
+        admin.editRoute(route, newRouteName, newRouteSpeedLimit, newRouteLength, newRoutePoliceStation);
     }
 }

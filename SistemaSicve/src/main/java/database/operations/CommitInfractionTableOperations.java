@@ -1,19 +1,17 @@
-package utils;
+package database.operations;
 
-import command.pattern.Infraction;
-import command.pattern.Route;
-import observer_memento.pattern.Trip;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import singleton.pattern.Database;
+import utils.Infraction;
+import utils.LoggerClass;
+import utils.Route;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 
-import static utils.RouteTableOperations.getRouteFromDb;
+import static database.operations.RouteTableOperations.getRouteFromDb;
 
 /**
  * Class to perform operations on the infraction table

@@ -1,6 +1,7 @@
 package command.pattern;
 
 import observer_memento.pattern.Vehicle;
+import utils.Route;
 
 /**
  * Command to get route speed statistics by vehicle
@@ -8,9 +9,9 @@ import observer_memento.pattern.Vehicle;
  */
 public class GetRouteVehicleStatisticsCommand implements Command {
     /**
-     * The tutor system
+     * The admin that will execute the command
      */
-    private TutorSystem tutorSystem;
+    private Admin admin;
 
     /**
      * The route to get the speed statistics
@@ -24,12 +25,12 @@ public class GetRouteVehicleStatisticsCommand implements Command {
 
     /**
      * GetRouteVehicleSpeedStatisticsCommand constructor
-     * @param tutorSystem The tutor system
+     * @param admin The admin that will execute the command
      * @param route The route to get the speed statistics
      * @param vehicle The vehicle which traveled the route
      */
-    public GetRouteVehicleStatisticsCommand(TutorSystem tutorSystem, Route route, Vehicle vehicle) {
-        this.tutorSystem = tutorSystem;
+    public GetRouteVehicleStatisticsCommand(Admin admin, Route route, Vehicle vehicle) {
+        this.admin = admin;
         this.route = route;
         this.vehicle = vehicle;
     }
@@ -39,6 +40,6 @@ public class GetRouteVehicleStatisticsCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.getRouteVehicleStatistics(route, vehicle);
+        admin.getRouteVehicleStatistics(route, vehicle);
     }
 }

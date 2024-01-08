@@ -1,11 +1,11 @@
 package strategy.pattern;
 
 import javafx.collections.ObservableList;
-import observer_memento.pattern.LoggedUser;
+import singleton.pattern.LoggedUser;
 import observer_memento.pattern.Vehicle;
 
 import static javafx.collections.FXCollections.observableArrayList;
-import static utils.VehicleTableOperations.getUserVehiclesFromDb;
+import static database.operations.VehicleTableOperations.getUserVehiclesFromDb;
 
 /**
  * Class to create a vehicle table

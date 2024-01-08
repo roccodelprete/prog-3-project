@@ -6,6 +6,7 @@ import com.twilio.type.PhoneNumber;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
+import singleton.pattern.LoggedUser;
 import utils.LoggerClass;
 
 import java.util.ArrayList;

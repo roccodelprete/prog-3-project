@@ -11,19 +11,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import observer_memento.pattern.LoggedUser;
+import singleton.pattern.LoggedUser;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
 import utils.LoggerClass;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.VehicleTableOperations.getUserVehiclesFromDb;
-import static utils.VehicleTableOperations.insertVehicleIntoDb;
+import static database.operations.VehicleTableOperations.getUserVehiclesFromDb;
+import static database.operations.VehicleTableOperations.insertVehicleIntoDb;
 
 public class AddVehicleController {
     /**

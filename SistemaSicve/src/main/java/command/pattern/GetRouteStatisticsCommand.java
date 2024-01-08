@@ -1,14 +1,16 @@
 package command.pattern;
 
+import utils.Route;
+
 /**
  * Command to route get speed statistics
  * @author Rocco Del Prete
  */
 public class GetRouteStatisticsCommand implements Command {
     /**
-     * The tutor system
+     * The admin that will execute the command
      */
-    private TutorSystem tutorSystem;
+    private Admin admin;
 
     /**
      * The route to get the speed statistics
@@ -17,11 +19,11 @@ public class GetRouteStatisticsCommand implements Command {
 
     /**
      * GetRouteSpeedStatisticsCommand constructor
-     * @param tutorSystem The tutor system
+     * @param admin The admin that will execute the command
      * @param route The route to get the speed statistics
      */
-    public GetRouteStatisticsCommand(TutorSystem tutorSystem, Route route) {
-        this.tutorSystem = tutorSystem;
+    public GetRouteStatisticsCommand(Admin admin, Route route) {
+        this.admin = admin;
         this.route = route;
     }
 
@@ -30,6 +32,6 @@ public class GetRouteStatisticsCommand implements Command {
      */
     @Override
     public void execute() {
-        tutorSystem.getRouteStatistics(route);
+        admin.getRouteStatistics(route);
     }
 }

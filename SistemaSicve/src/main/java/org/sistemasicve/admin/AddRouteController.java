@@ -14,15 +14,16 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import singleton.pattern.LoggedUser;
+import utils.PoliceStation;
+import utils.Route;
 
 import java.io.IOException;
-import java.util.Map;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.PoliceStationTableOperations.getAllPoliceStationsFromDb;
-import static utils.RouteTableOperations.getRouteFromDb;
-import static utils.UserTableOperations.getUserFromDb;
+import static database.operations.PoliceStationTableOperations.getAllPoliceStationsFromDb;
+import static database.operations.RouteTableOperations.getRouteFromDb;
 
 public class AddRouteController {
     /**
@@ -84,11 +85,10 @@ public class AddRouteController {
     @FXML
     public void handleAddRoute(ActionEvent event) throws IOException {
         try {
-            Admin admin = new Admin();
             TutorSystem tutorSystem = new TutorSystem();
 
             Command addRouteCommand = new AddRouteCommand(
-                    tutorSystem,
+                    LoggedUser.getInstance().getAdmin(),
                     new Route(
                             routeName.getText(),
                             Integer.parseInt(routeSpeedLimit.getText()),
@@ -97,10 +97,10 @@ public class AddRouteController {
                     )
             );
 
-            admin.addCommand(addRouteCommand);
+            tutorSystem.addCommand(addRouteCommand);
 
             if (getRouteFromDb(routeName.getText()) == null) {
-                admin.executeCommand(addRouteCommand);
+                tutorSystem.executeCommand(addRouteCommand);
                 addedRoute = getRouteFromDb(routeName.getText());
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "Route already exists!");

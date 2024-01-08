@@ -1,9 +1,7 @@
 package org.sistemasicve.user;
 
-import command.pattern.PoliceStation;
-import command.pattern.Route;
+import utils.Route;
 import command.pattern.TutorSystem;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,28 +12,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.concurrent.CountDownLatch;
 
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import observer_memento.pattern.LoggedUser;
-import observer_memento.pattern.Trip;
+import singleton.pattern.LoggedUser;
+import singleton.pattern.Trip;
 import observer_memento.pattern.TutorStation;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
 import utils.LoggerClass;
 
-import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
-import static utils.PoliceStationTableOperations.getPoliceStationFromDb;
-import static utils.RouteTableOperations.getAllRoutesFromDb;
-import static utils.RouteTableOperations.getRouteFromDb;
-import static utils.VehicleTableOperations.getUserVehiclesFromDb;
-import static utils.VehicleTableOperations.getVehicleFromDb;
+import static database.operations.RouteTableOperations.getAllRoutesFromDb;
+import static database.operations.RouteTableOperations.getRouteFromDb;
+import static database.operations.VehicleTableOperations.getUserVehiclesFromDb;
+import static database.operations.VehicleTableOperations.getVehicleFromDb;
 
 public class EnterRouteController {
     /**
