@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 /**
  * Class to represent the connection to the database
+ * Singleton pattern
  * @author Rocco Del Prete
  */
 

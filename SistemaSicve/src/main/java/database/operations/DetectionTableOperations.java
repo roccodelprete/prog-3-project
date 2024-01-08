@@ -1,7 +1,6 @@
 package database.operations;
 
 import org.jetbrains.annotations.NotNull;
-import singleton.pattern.Database;
 import utils.Detection;
 import utils.LoggerClass;
 

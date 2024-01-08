@@ -4,7 +4,6 @@ import singleton.pattern.LoggedUser;
 import org.mindrot.jbcrypt.BCrypt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import singleton.pattern.Database;
 import utils.Alert;
 import utils.LoggerClass;
 import utils.User;

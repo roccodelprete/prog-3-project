@@ -2,7 +2,6 @@ package database.operations;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import singleton.pattern.Database;
 import utils.Alert;
 import utils.LoggerClass;
 import utils.PoliceStation;

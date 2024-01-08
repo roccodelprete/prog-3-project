@@ -1,4 +1,6 @@
-package singleton.pattern;
+package database.operations;
+
+import singleton.pattern.ConnectionClass;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
