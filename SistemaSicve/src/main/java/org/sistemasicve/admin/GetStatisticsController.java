@@ -17,6 +17,7 @@ import utils.FormatSpeed;
 import utils.Route;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import static utils.Alert.showAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
@@ -117,9 +118,15 @@ public class GetStatisticsController {
 
                 tutorSystem.executeCommand(getRouteVehicleStatisticsCommand);
 
-                avgVehicleSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("avgSpeed"), FormatSpeed.SpeedUnit.KMH));
-                minVehicleSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("minSpeed"), FormatSpeed.SpeedUnit.KMH));
-                maxVehicleSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("maxSpeed"), FormatSpeed.SpeedUnit.KMH));
+                DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+                String formattedAvgSpeed = decimalFormat.format(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("avgSpeed")).replace(",", ".");
+                String formattedMinSpeed = decimalFormat.format(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("minSpeed")).replace(",", ".");
+                String formattedMaxSpeed = decimalFormat.format(LoggedUser.getInstance().getAdmin().getRouteVehicleStatistics().get("maxSpeed")).replace(",", ".");
+
+                avgVehicleSpeed.setText(formatSpeed(Double.parseDouble(formattedAvgSpeed), FormatSpeed.SpeedUnit.KMH).replace(".", ","));
+                minVehicleSpeed.setText(formatSpeed(Double.parseDouble(formattedMinSpeed), FormatSpeed.SpeedUnit.KMH).replace(".", ","));
+                maxVehicleSpeed.setText(formatSpeed(Double.parseDouble(formattedMaxSpeed), FormatSpeed.SpeedUnit.KMH).replace(".", ","));
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Error in getting route vehicle statistics: " + e.getMessage());
             }
@@ -139,9 +146,15 @@ public class GetStatisticsController {
         tutorSystem.addCommand(getRouteStatisticsCommand);
         tutorSystem.executeCommand(getRouteStatisticsCommand);
 
-        avgSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("avgSpeed"), FormatSpeed.SpeedUnit.KMH));
-        minSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("minSpeed"), FormatSpeed.SpeedUnit.KMH));
-        maxSpeed.setText(formatSpeed(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("maxSpeed"), FormatSpeed.SpeedUnit.KMH));
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+        String formattedAvgSpeed = decimalFormat.format(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("avgSpeed")).replace(",", ".");
+        String formattedMinSpeed = decimalFormat.format(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("minSpeed")).replace(",", ".");
+        String formattedMaxSpeed = decimalFormat.format(LoggedUser.getInstance().getAdmin().getRouteStatistics().get("maxSpeed")).replace(",", ".");
+
+        avgSpeed.setText(formatSpeed(Double.parseDouble(formattedAvgSpeed), FormatSpeed.SpeedUnit.KMH).replace(".", ","));
+        minSpeed.setText(formatSpeed(Double.parseDouble(formattedMinSpeed), FormatSpeed.SpeedUnit.KMH).replace(".", ","));
+        maxSpeed.setText(formatSpeed(Double.parseDouble(formattedMaxSpeed), FormatSpeed.SpeedUnit.KMH).replace(".", ","));
     }
 
     /**
