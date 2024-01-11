@@ -12,7 +12,7 @@ public abstract class Observer {
     /**
      * The TutorStation which the observer is subscribed to
      */
-    private TutorStation tutorStation;
+    protected TutorStation tutorStation;
 
     /**
      * function to notify the observer
