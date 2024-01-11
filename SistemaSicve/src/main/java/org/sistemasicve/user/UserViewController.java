@@ -155,12 +155,12 @@ public class UserViewController {
             Trip.getInstance().setContinueMoving(false);
             LoggerClass.log("Vehicle " + Trip.getInstance().getVehicle().getPlate() + " exited the route " + Trip.getInstance().getRoute().getName(), LoggerClass.LogType.INFO);
 
-            TutorStation tutorStation = new TutorStation();
+            TutorStation tutorStation = Trip.getInstance().getVehicle().getTutorStation();
             tutorStation.detach(Trip.getInstance().getVehicle());
 
             Route route = Trip.getInstance().getRoute();
 
-            if (Trip.getInstance().getInfractions().get(route).isEmpty()) {
+            if (Trip.getInstance().getInfractions().get(route) == null || Trip.getInstance().getInfractions().get(route).isEmpty()) {
                 LoggerClass.log("No infractions committed on route " + route.getName() + " by vehicle " + Trip.getInstance().getVehicle().getPlate(), LoggerClass.LogType.INFO);
             } else {
                 Infraction mostSeriousInfraction = Trip.getInstance().getInfractions().get(route).getFirst();

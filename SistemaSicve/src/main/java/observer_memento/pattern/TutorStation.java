@@ -15,17 +15,17 @@ import static utils.Alert.showAlert;
 
 /**
  * TutorStation (Concrete subject) that notifies observers about events
- * @see VehicleObserver
+ * @see Observer
  * @author Rocco Del Prete
  */
 public class TutorStation {
-    private ArrayList<VehicleObserver> observers = new ArrayList<>();
+    private ArrayList<Observer> observers = new ArrayList<>();
 
     /**
      * function to add an observer
      * @param observer The observer to add
      */
-    public void attach(VehicleObserver observer) {
+    public void attach(Observer observer) {
         observers.add(observer);
     }
 
@@ -33,7 +33,7 @@ public class TutorStation {
      * function to remove an observer
      * @param observer The observer to remove
      */
-    public void detach(VehicleObserver observer) {
+    public void detach(Observer observer) {
         observers.remove(observer);
     }
 
@@ -42,7 +42,7 @@ public class TutorStation {
      * @param message The message to send to the observers
      */
     public void notifyObservers(String message) {
-        for (VehicleObserver observer : observers) {
+        for (Observer observer : observers) {
             observer.update(new SimpleStringProperty(message));
         }
     }
@@ -51,7 +51,7 @@ public class TutorStation {
      * function to get the vehicle observers
      * @return The vehicle observers
      */
-    public ArrayList<VehicleObserver> getObservers() {
+    public ArrayList<Observer> getObservers() {
         return this.observers;
     }
 
@@ -60,7 +60,7 @@ public class TutorStation {
      * @param observer The vehicle observer to get
      * @return The vehicle observer
      */
-    public Vehicle getObserver(VehicleObserver observer) {
+    public Vehicle getObserver(Observer observer) {
         return (Vehicle) this.observers.get(this.observers.indexOf(observer));
     }
 
@@ -69,7 +69,7 @@ public class TutorStation {
      * @param observer The observer to notify
      * @param message The message to send to the observer
      */
-    public void notifyObserver(@NotNull VehicleObserver observer, String message) {
+    public void notifyObserver(@NotNull Observer observer, String message) {
         String twilioSID = "AC2eb490c92c14b104496daf9bbc8f681d";
         String twilioToken = "768f4a6fad548897bf23b30ad20a7c82";
 

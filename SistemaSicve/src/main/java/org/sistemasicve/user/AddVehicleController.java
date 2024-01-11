@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import observer_memento.pattern.TutorStation;
 import singleton.pattern.LoggedUser;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
@@ -83,7 +84,7 @@ public class AddVehicleController {
     void handleAddVehicle(ActionEvent event) {
         ArrayList<Vehicle> vehicles = getUserVehiclesFromDb(LoggedUser.getInstance().getUser());
 
-        Vehicle vehicleToAdd = new Vehicle(vehiclePlate.getText(), vehicleBrand.getText(), vehicleModel.getText(), LoggedUser.getInstance().getUser().getEmail());
+        Vehicle vehicleToAdd = new Vehicle(new TutorStation(), vehiclePlate.getText(), vehicleBrand.getText(), vehicleModel.getText(), LoggedUser.getInstance().getUser().getEmail());
 
         if (!vehicles.contains(vehicleToAdd)) {
             try {

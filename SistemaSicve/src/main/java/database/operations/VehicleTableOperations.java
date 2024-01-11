@@ -1,5 +1,6 @@
 package database.operations;
 
+import observer_memento.pattern.TutorStation;
 import observer_memento.pattern.Vehicle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +65,8 @@ public class VehicleTableOperations {
                 String model = resultSet.getString("model");
                 String userEmail = resultSet.getString("user_email");
 
-                return new Vehicle(plate, brand, model, userEmail);
+                TutorStation tutorStation = new TutorStation();
+                return new Vehicle(tutorStation, plate, brand, model, userEmail);
             }
 
         } catch (Exception e) {
@@ -90,7 +92,7 @@ public class VehicleTableOperations {
                 String model = resultSet.getString("model");
                 String userEmail = resultSet.getString("user_email");
 
-                vehicles.add(new Vehicle(plate, brand, model, userEmail));
+                vehicles.add(new Vehicle(new TutorStation(), plate, brand, model, userEmail));
             }
 
         } catch (Exception e) {
@@ -116,7 +118,7 @@ public class VehicleTableOperations {
                 String model = resultSet.getString("model");
                 String userEmail = resultSet.getString("user_email");
 
-                vehicles.add(new Vehicle(plate, brand, model, userEmail));
+                vehicles.add(new Vehicle(new TutorStation(), plate, brand, model, userEmail));
             }
 
         } catch (Exception e) {

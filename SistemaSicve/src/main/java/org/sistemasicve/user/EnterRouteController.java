@@ -83,9 +83,10 @@ public class EnterRouteController {
         Trip.getInstance().setRoute(getRouteFromDb(routesList.getSelectionModel().getSelectedItem()));
         Trip.getInstance().setVehicle(getVehicleFromDb(vehiclesList.getSelectionModel().getSelectedItem()));
 
+        TutorStation tutorStation = Trip.getInstance().getVehicle().getTutorStation();
+
         currentRoute = Trip.getInstance().getRoute();
 
-        TutorStation tutorStation = new TutorStation();
         tutorStation.attach(Trip.getInstance().getVehicle());
 
         if (LoggedUser.getInstance().getUser().getSendMeNotification()) {

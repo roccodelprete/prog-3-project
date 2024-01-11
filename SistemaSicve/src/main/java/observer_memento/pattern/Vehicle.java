@@ -11,7 +11,7 @@ import utils.LoggerClass;
  * This class also implements the Memento pattern
  * @author Rocco Del Prete
  */
-public class Vehicle implements VehicleObserver {
+public class Vehicle extends Observer {
     /**
      * The vehicle plate
      */
@@ -45,7 +45,8 @@ public class Vehicle implements VehicleObserver {
     /**
      * Constructor
      */
-    public Vehicle(String plate, String brand, String model, String userEmail) {
+    public Vehicle(TutorStation tutorStation, String plate, String brand, String model, String userEmail) {
+        this.tutorStation = tutorStation;
         this.plate = new SimpleStringProperty(plate);
         this.brand = new SimpleStringProperty(brand);
         this.model = new SimpleStringProperty(model);
