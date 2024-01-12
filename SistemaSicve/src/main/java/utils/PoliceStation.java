@@ -11,14 +11,37 @@ public class PoliceStation {
     /**
      * The police station name
      */
+    private SimpleStringProperty code;
+
+    /**
+     * The police station name
+     */
     private SimpleStringProperty name;
 
     /**
      * Constructor
+     * @param code The police station code
      * @param name The police station name
      */
-    public PoliceStation(String name) {
+    public PoliceStation(String code, String name) {
+        this.code = new SimpleStringProperty(code);
         this.name = new SimpleStringProperty(name);
+    }
+
+    /**
+     * function to get the police station code
+     * @return The police station code
+     */
+    public String getCode() {
+        return code.get();
+    }
+
+    /**
+     * function to set the police station code
+     * @param code The police station code
+     */
+    public void setCode(String code) {
+        this.code.set(code);
     }
 
     /**

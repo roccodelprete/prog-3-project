@@ -73,7 +73,7 @@ public class AddRouteController {
         setCursorStyleOnHover(addButton, Cursor.HAND);
 
         for (PoliceStation policeStation : getAllPoliceStationsFromDb()) {
-            policeStationsList.getItems().add(policeStation.getName());
+            policeStationsList.getItems().add(policeStation.getCode() + " - " + policeStation.getName());
         }
     }
 
@@ -93,7 +93,7 @@ public class AddRouteController {
                             routeName.getText(),
                             Integer.parseInt(routeSpeedLimit.getText()),
                             Integer.parseInt(routeLength.getText()),
-                            policeStationsList.getSelectionModel().getSelectedItem()
+                            policeStationsList.getSelectionModel().getSelectedItem().split(" - ")[0]
                     )
             );
 

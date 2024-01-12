@@ -17,12 +17,18 @@
             <Font name="Century Gothic" size="15.0" />
          </font>
       </Button>
-      <Label layoutX="72.0" layoutY="115.0" prefHeight="20.0" prefWidth="67.0" text="Name">
+      <Label layoutX="72.0" layoutY="81.0" prefHeight="20.0" prefWidth="67.0" text="Code">
          <font>
             <Font name="Century Gothic" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="policeStationName" layoutX="155.0" layoutY="112.0" />
+      <TextField fx:id="policeStationCode" layoutX="157.0" layoutY="79.0" prefHeight="25.0" prefWidth="149.0" />
+      <Label layoutX="72.0" layoutY="127.0" prefHeight="20.0" prefWidth="67.0" text="Name">
+         <font>
+            <Font name="Century Gothic" size="16.0" />
+         </font>
+      </Label>
+      <TextField fx:id="policeStationName" layoutX="157.0" layoutY="125.0" />
       <Button fx:id="cancelButton" layoutX="106.0" layoutY="205.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="29.0" prefWidth="94.0" text="Cancel">
          <font>
             <Font name="Century Gothic" size="15.0" />

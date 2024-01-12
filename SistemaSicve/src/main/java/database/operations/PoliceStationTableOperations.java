@@ -25,10 +25,11 @@ public class PoliceStationTableOperations {
      * @return The police station inserted
      */
     public static @NotNull PoliceStation insertPoliceStationIntoDb(@NotNull PoliceStation policeStation) {
-        String insertQuery = "INSERT INTO police_station (name) VALUES (?)";
+        String insertQuery = "INSERT INTO police_station (code, name) VALUES (?, ?)";
 
         try (PreparedStatement preparedStatement = db.insert(insertQuery);) {
-            preparedStatement.setString(1, policeStation.getName());
+            preparedStatement.setString(1, policeStation.getCode());
+            preparedStatement.setString(2, policeStation.getName());
 
             preparedStatement.executeUpdate();
 
@@ -45,17 +46,18 @@ public class PoliceStationTableOperations {
 
     /**
      * Function to get a police station from the database
-     * @param name The name of the police station to get
+     * @param code The code of the police station to get
      * @return The police station from the database if exists, null otherwise
      */
-    public static @Nullable PoliceStation getPoliceStationFromDb(String name) {
-        String selectQuery = "SELECT * FROM police_station WHERE name = '" + name + "'";
+    public static @Nullable PoliceStation getPoliceStationFromDb(String code) {
+        String selectQuery = "SELECT * FROM police_station WHERE name = '" + code + "'";
 
         try (ResultSet resultSet = db.query(selectQuery)) {
             if (resultSet.next()) {
+                String policeStationCode = resultSet.getString("code");
                 String policeStationName = resultSet.getString("name");
 
-                return new PoliceStation(policeStationName);
+                return new PoliceStation(policeStationCode, policeStationName);
             }
 
         } catch (Exception e) {
@@ -76,9 +78,10 @@ public class PoliceStationTableOperations {
 
         try (ResultSet resultSet = db.query(selectQuery)) {
             while (resultSet.next()) {
+                String policeStationCode = resultSet.getString("code");
                 String policeStationName = resultSet.getString("name");
 
-                PoliceStation policeStation = new PoliceStation(policeStationName);
+                PoliceStation policeStation = new PoliceStation(policeStationCode, policeStationName);
 
                 policeStations.add(policeStation);
             }

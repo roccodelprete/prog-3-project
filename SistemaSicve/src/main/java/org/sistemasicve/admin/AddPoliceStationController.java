@@ -29,6 +29,12 @@ public class AddPoliceStationController {
     private Button cancelButton;
 
     /**
+     * The police station code text field
+     */
+    @FXML
+    private TextField policeStationCode;
+
+    /**
      * The police station name text field
      */
     @FXML
@@ -54,12 +60,12 @@ public class AddPoliceStationController {
      */
     @FXML
     void handleAddPoliceStation(ActionEvent event) throws IOException {
-        if (policeStationName.getText().isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Police station name cannot be empty");
-        }else if (getPoliceStationFromDb(policeStationName.getText()) != null) {
+        if (policeStationName.getText().isEmpty() || policeStationCode.getText().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Please fill all the fields");
+        } else if (getPoliceStationFromDb(policeStationCode.getText()) != null) {
             showAlert(Alert.AlertType.ERROR, "Error", "Police station already exists");
         } else {
-            PoliceStation policeStation = new PoliceStation(policeStationName.getText());
+            PoliceStation policeStation = new PoliceStation(policeStationCode.getText(), policeStationName.getText());
             insertPoliceStationIntoDb(policeStation);
             openAllRoutesView(event);
         }

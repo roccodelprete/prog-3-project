@@ -17,10 +17,12 @@ import strategy.pattern.RouteTable;
 import strategy.pattern.TableType;
 import utils.FormatLength;
 import utils.FormatSpeed;
+import utils.PoliceStation;
 import utils.Route;
 
 import java.io.IOException;
 
+import static database.operations.PoliceStationTableOperations.getPoliceStationFromDb;
 import static utils.Alert.showConfirmationAlert;
 import static utils.CursorStyle.setCursorStyleOnHover;
 import static utils.FormatLength.formatLength;
