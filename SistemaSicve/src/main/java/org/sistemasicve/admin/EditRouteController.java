@@ -75,7 +75,7 @@ public class EditRouteController {
         setCursorStyleOnHover(editButton, Cursor.HAND);
 
         for (PoliceStation policeStation : getAllPoliceStationsFromDb()) {
-            policeStationsList.getItems().add(policeStation.getName());
+            policeStationsList.getItems().add(policeStation.getCode() + " - " + policeStation.getName());
         }
     }
 
@@ -104,15 +104,13 @@ public class EditRouteController {
         try {
             TutorSystem tutorSystem = new TutorSystem();
 
-            String policeStationName = policeStationsList.getSelectionModel().getSelectedItem();
-
             Command editCommand = new EditRouteCommand(
                 LoggedUser.getInstance().getAdmin(),
                 route,
                 routeName.getText(),
                 Integer.parseInt(routeSpeedLimit.getText()),
                 Integer.parseInt(routeLength.getText()),
-                policeStationName
+                policeStationsList.getSelectionModel().getSelectedItem().split(" - ")[0]
             );
 
             tutorSystem.addCommand(editCommand);
